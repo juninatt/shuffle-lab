@@ -39,4 +39,28 @@ class DeckFactoryTest {
         assertThat(firstDeck).isNotSameAs(secondDeck);
         assertThat(firstDeck).isEqualTo(secondDeck);
     }
+
+    @Test
+    void standardDeckShouldContainAllSuits() {
+        var deck = DeckFactory.standardDeck();
+
+        assertThat(
+                deck.stream()
+                        .map(Card::suit)
+                        .distinct()
+        ).hasSize(4);
+    }
+
+    @Test
+    void shouldContainAllRanksForEachSuit() {
+        var deck = DeckFactory.standardDeck();
+
+        for (Suit suit : Suit.values()) {
+            long count = deck.stream()
+                    .filter(card -> card.suit() == suit)
+                    .count();
+
+            assertThat(count).isEqualTo(13);
+        }
+    }
 }
