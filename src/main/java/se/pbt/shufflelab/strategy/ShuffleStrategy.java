@@ -1,4 +1,4 @@
-package se.pbt.shufflelab.shuffle;
+package se.pbt.shufflelab.strategy;
 
 import se.pbt.shufflelab.card.Card;
 

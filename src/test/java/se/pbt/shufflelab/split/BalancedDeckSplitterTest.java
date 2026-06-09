@@ -2,8 +2,8 @@ package se.pbt.shufflelab.split;
 
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.card.DeckFactory;
-import se.pbt.shufflelab.shuffle.split.BalancedDeckSplitter;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.random.RandomGeneratorFactory;
@@ -33,7 +33,7 @@ class BalancedDeckSplitterTest {
         var packets = splitter.split(deck, random);
 
         var combined = packets.stream()
-                .flatMap(packet -> packet.stream())
+                .flatMap(Collection::stream)
                 .toList();
 
         assertThat(new HashSet<>(combined)).isEqualTo(new HashSet<>(deck));

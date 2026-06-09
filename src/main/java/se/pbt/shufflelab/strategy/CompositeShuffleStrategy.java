@@ -1,6 +1,7 @@
-package se.pbt.shufflelab.shuffle;
+package se.pbt.shufflelab.strategy;
 
 import se.pbt.shufflelab.card.Card;
+import se.pbt.shufflelab.operation.ShuffleOperation;
 
 import java.util.List;
 import java.util.random.RandomGenerator;
