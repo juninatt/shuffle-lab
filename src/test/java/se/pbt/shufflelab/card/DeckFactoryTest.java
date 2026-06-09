@@ -1,14 +1,17 @@
 package se.pbt.shufflelab.card;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName("Deck factory")
 class DeckFactoryTest {
 
     @Test
+    @DisplayName("A standard deck should contain 52 cards")
     void standardDeckShouldContain52Cards() {
         var deck = DeckFactory.standardDeck();
 
@@ -16,6 +19,7 @@ class DeckFactoryTest {
     }
 
     @Test
+    @DisplayName("A standard deck should contain 52 unique cards")
     void standardDeckShouldContain52UniqueCards() {
         var deck = DeckFactory.standardDeck();
 
@@ -23,6 +27,7 @@ class DeckFactoryTest {
     }
 
     @Test
+    @DisplayName("A standard deck should be mutable")
     void standardDeckShouldReturnMutableDeck() {
         var deck = DeckFactory.standardDeck();
 
@@ -32,6 +37,7 @@ class DeckFactoryTest {
     }
 
     @Test
+    @DisplayName("A standard deck should return a new deck instance each time")
     void standardDeckShouldReturnNewDeckEachTime() {
         var firstDeck = DeckFactory.standardDeck();
         var secondDeck = DeckFactory.standardDeck();
@@ -41,6 +47,7 @@ class DeckFactoryTest {
     }
 
     @Test
+    @DisplayName("A standard deck should contain all four suits")
     void standardDeckShouldContainAllSuits() {
         var deck = DeckFactory.standardDeck();
 
@@ -52,7 +59,8 @@ class DeckFactoryTest {
     }
 
     @Test
-    void shouldContainAllRanksForEachSuit() {
+    @DisplayName("A standard deck should contain all thirteen ranks for each suit")
+    void standardDeckShouldContainAllRanksForEachSuit() {
         var deck = DeckFactory.standardDeck();
 
         for (Suit suit : Suit.values()) {

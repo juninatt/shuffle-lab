@@ -1,4 +1,4 @@
-package se.pbt.shufflelab.strategy;
+package se.pbt.shufflelab.routine;
 
 import se.pbt.shufflelab.card.Card;
 import se.pbt.shufflelab.operation.ShuffleOperation;
@@ -14,7 +14,7 @@ import java.util.random.RandomGenerator;
  * It can be used to model real-world shuffling techniques,
  * such as repeatedly cutting and riffle shuffling a deck.</p>
  */
-public class CompositeShuffleStrategy implements ShuffleStrategy {
+public class CompositeShuffleRoutine implements ShuffleRoutine {
 
     private final String name;
     private final List<ShuffleOperation> operations;
@@ -25,7 +25,7 @@ public class CompositeShuffleStrategy implements ShuffleStrategy {
      * @param name a human-readable name describing the strategy
      * @param operations the operations that make up the strategy
      */
-    public CompositeShuffleStrategy(
+    public CompositeShuffleRoutine(
             String name,
             List<ShuffleOperation> operations) {
 

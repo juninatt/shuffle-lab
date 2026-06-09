@@ -1,4 +1,4 @@
-package se.pbt.shufflelab.strategy;
+package se.pbt.shufflelab.routine;
 
 import se.pbt.shufflelab.card.Card;
 
@@ -12,7 +12,7 @@ import java.util.random.RandomGenerator;
  * a deck. Examples include a Fisher-Yates shuffle, repeated riffle
  * shuffles, or other combinations of shuffle operations.</p>
  */
-public interface ShuffleStrategy {
+public interface ShuffleRoutine {
 
     /**
      * Applies this shuffling strategy to the given deck.

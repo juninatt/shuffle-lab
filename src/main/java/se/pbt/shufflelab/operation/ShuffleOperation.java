@@ -1,7 +1,7 @@
 package se.pbt.shufflelab.operation;
 
 import se.pbt.shufflelab.card.Card;
-import se.pbt.shufflelab.strategy.ShuffleStrategy;
+import se.pbt.shufflelab.routine.ShuffleRoutine;
 
 import java.util.List;
 import java.util.random.RandomGenerator;
@@ -12,7 +12,7 @@ import java.util.random.RandomGenerator;
  * <p>Examples include cutting the deck, performing a riffle merge,
  * transferring packets during an overhand shuffle, or swapping cards.
  * Multiple operations can be combined to form a complete
- * {@link ShuffleStrategy}.</p>
+ * {@link ShuffleRoutine}.</p>
  */
 public interface ShuffleOperation {
 
