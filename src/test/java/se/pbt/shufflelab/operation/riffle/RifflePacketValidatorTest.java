@@ -83,4 +83,17 @@ class RifflePacketValidatorTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Packet imbalance is too large for this riffle shuffle");
     }
+
+    @Test
+    @DisplayName("Should reject two empty packets")
+    void shouldRejectTwoEmptyPackets() {
+        var left = List.<Card>of();
+        var right = List.<Card>of();
+
+        assertThatThrownBy(() ->
+                RifflePacketValidator.validate(left, right, 0.10)
+        )
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("A riffle shuffle requires two non-empty packets");
+    }
 }
