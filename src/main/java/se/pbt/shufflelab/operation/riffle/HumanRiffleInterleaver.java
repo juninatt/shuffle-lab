@@ -27,6 +27,8 @@ public class HumanRiffleInterleaver implements RiffleInterleaver {
             List<Card> right,
             RandomGenerator random) {
 
+        RifflePacketValidator.validate(left, right, 0.15);
+
         List<Card> interleaved = new ArrayList<>(left.size() + right.size());
 
         int leftIndex = 0;

@@ -17,6 +17,8 @@ public class PerfectRiffleInterleaver implements RiffleInterleaver {
             List<Card> right,
             RandomGenerator random) {
 
+        RifflePacketValidator.validate(left, right, 0.05);
+
         List<Card> interleaved = new ArrayList<>(left.size() + right.size());
 
         int leftIndex = 0;

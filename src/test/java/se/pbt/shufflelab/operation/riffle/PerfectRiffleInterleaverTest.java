@@ -7,6 +7,7 @@ import se.pbt.shufflelab.card.DeckFactory;
 import java.util.random.RandomGeneratorFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("Perfect riffle interleaver")
 class PerfectRiffleInterleaverTest {
@@ -104,8 +105,8 @@ class PerfectRiffleInterleaverTest {
     }
 
     @Test
-    @DisplayName("A perfect riffle should append remaining cards when packets have different sizes")
-    void shouldHandlePacketsWithDifferentSizes() {
+    @DisplayName("A perfect riffle should reject packets with too much imbalance")
+    void shouldRejectPacketsWithTooMuchImbalance() {
         var deck = DeckFactory.standardDeck();
 
         var left = deck.subList(0, 3);
@@ -113,21 +114,12 @@ class PerfectRiffleInterleaverTest {
 
         var interleaver = new PerfectRiffleInterleaver();
 
-        var result = interleaver.interleave(
+        assertThatThrownBy(() -> interleaver.interleave(
                 left,
                 right,
                 RandomGeneratorFactory.of("L64X128MixRandom").create(42)
-        );
-
-        assertThat(result).containsExactly(
-                left.get(0),
-                right.get(0),
-                left.get(1),
-                right.get(1),
-                left.get(2),
-                right.get(2),
-                right.get(3),
-                right.get(4)
-        );
+        ))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Packet imbalance is too large for this riffle shuffle");
     }
 }

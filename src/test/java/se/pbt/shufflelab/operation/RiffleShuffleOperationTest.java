@@ -1,8 +1,10 @@
 package se.pbt.shufflelab.operation;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.card.DeckFactory;
+import se.pbt.shufflelab.operation.riffle.HumanRiffleInterleaver;
 import se.pbt.shufflelab.operation.riffle.PerfectRiffleInterleaver;
 import se.pbt.shufflelab.split.BalancedDeckSplitter;
 
@@ -15,91 +17,148 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("Riffle shuffle operation")
 class RiffleShuffleOperationTest {
 
-    @Test
-    @DisplayName("A riffle shuffle should keep every card in the deck")
-    void shouldPreserveAllCards() {
-        var deck = DeckFactory.standardDeck();
-        var originalCards = new HashSet<>(deck);
+    @Nested
+    @DisplayName("Perfect riffle behavior")
+    class PerfectRiffleBehavior {
 
-        var operation = new RiffleShuffleOperation(
-                new BalancedDeckSplitter(4),
-                new PerfectRiffleInterleaver()
-        );
+        @Test
+        @DisplayName("A perfect riffle shuffle should keep every card in the deck")
+        void shouldPreserveAllCards() {
+            var deck = DeckFactory.standardDeck();
+            var originalCards = new HashSet<>(deck);
 
-        var random = RandomGeneratorFactory
-                .of("L64X128MixRandom")
-                .create(42);
+            var operation = new RiffleShuffleOperation(
+                    new BalancedDeckSplitter(0),
+                    new PerfectRiffleInterleaver()
+            );
 
-        operation.apply(deck, random);
+            var random = RandomGeneratorFactory
+                    .of("L64X128MixRandom")
+                    .create(42);
 
-        assertThat(deck).hasSize(52);
-        assertThat(new HashSet<>(deck)).isEqualTo(originalCards);
+            operation.apply(deck, random);
+
+            assertThat(deck).hasSize(52);
+            assertThat(new HashSet<>(deck)).isEqualTo(originalCards);
+        }
+
+        @Test
+        @DisplayName("A perfect riffle shuffle should change the card order")
+        void shouldChangeDeckOrder() {
+            var deck = DeckFactory.standardDeck();
+            var original = List.copyOf(deck);
+
+            var operation = new RiffleShuffleOperation(
+                    new BalancedDeckSplitter(0),
+                    new PerfectRiffleInterleaver()
+            );
+
+            var random = RandomGeneratorFactory
+                    .of("L64X128MixRandom")
+                    .create(42);
+
+            operation.apply(deck, random);
+
+            assertThat(deck).isNotEqualTo(original);
+        }
+
+        @Test
+        @DisplayName("A perfect riffle shuffle should alternate cards from both packets")
+        void shouldAlternateCardsFromBothPackets() {
+            var deck = DeckFactory.standardDeck();
+            var original = List.copyOf(deck);
+
+            var operation = new RiffleShuffleOperation(
+                    new BalancedDeckSplitter(0),
+                    new PerfectRiffleInterleaver()
+            );
+
+            var random = RandomGeneratorFactory
+                    .of("L64X128MixRandom")
+                    .create(42);
+
+            operation.apply(deck, random);
+
+            assertThat(deck.get(0)).isEqualTo(original.get(0));
+            assertThat(deck.get(1)).isEqualTo(original.get(26));
+            assertThat(deck.get(2)).isEqualTo(original.get(1));
+            assertThat(deck.get(3)).isEqualTo(original.get(27));
+        }
     }
 
-    @Test
-    @DisplayName("A riffle shuffle should change the card order")
-    void shouldChangeDeckOrder() {
-        var deck = DeckFactory.standardDeck();
-        var original = List.copyOf(deck);
+    @Nested
+    @DisplayName("Human riffle behavior")
+    class HumanRiffleBehavior {
 
-        var operation = new RiffleShuffleOperation(
-                new BalancedDeckSplitter(4),
-                new PerfectRiffleInterleaver()
-        );
+        @Test
+        @DisplayName("A human riffle shuffle should keep every card in the deck")
+        void shouldPreserveAllCards() {
+            var deck = DeckFactory.standardDeck();
+            var originalCards = new HashSet<>(deck);
 
-        var random = RandomGeneratorFactory
-                .of("L64X128MixRandom")
-                .create(42);
+            var operation = new RiffleShuffleOperation(
+                    new BalancedDeckSplitter(3),
+                    new HumanRiffleInterleaver(3)
+            );
 
-        operation.apply(deck, random);
+            var random = RandomGeneratorFactory
+                    .of("L64X128MixRandom")
+                    .create(42);
 
-        assertThat(deck).isNotEqualTo(original);
-    }
+            operation.apply(deck, random);
 
-    @Test
-    @DisplayName("A perfect riffle should alternate cards from both packets")
-    void shouldInterleaveCardsFromBothPackets() {
-        var deck = DeckFactory.standardDeck();
-        var original = List.copyOf(deck);
+            assertThat(deck).hasSize(52);
+            assertThat(new HashSet<>(deck)).isEqualTo(originalCards);
+        }
 
-        var operation = new RiffleShuffleOperation(
-                new BalancedDeckSplitter(0),
-                new PerfectRiffleInterleaver()
-        );
+        @Test
+        @DisplayName("A human riffle shuffle should change the card order")
+        void shouldChangeDeckOrder() {
+            var deck = DeckFactory.standardDeck();
+            var original = List.copyOf(deck);
 
-        var random = RandomGeneratorFactory
-                .of("L64X128MixRandom")
-                .create(42);
+            var operation = new RiffleShuffleOperation(
+                    new BalancedDeckSplitter(3),
+                    new HumanRiffleInterleaver(3)
+            );
 
-        operation.apply(deck, random);
+            var random = RandomGeneratorFactory
+                    .of("L64X128MixRandom")
+                    .create(42);
 
-        assertThat(deck.get(0)).isEqualTo(original.get(0));
-        assertThat(deck.get(1)).isEqualTo(original.get(26));
-        assertThat(deck.get(2)).isEqualTo(original.get(1));
-        assertThat(deck.get(3)).isEqualTo(original.get(27));
-    }
+            operation.apply(deck, random);
 
-    @Test
-    @DisplayName("A perfect riffle shuffle should split the deck evenly and alternate the packets")
-    void shouldPerformPerfectRiffleShuffle() {
-        var deck = DeckFactory.standardDeck();
-        var original = List.copyOf(deck);
+            assertThat(deck).isNotEqualTo(original);
+        }
 
-        var operation = new RiffleShuffleOperation(
-                new BalancedDeckSplitter(0),
-                new PerfectRiffleInterleaver()
-        );
+        @Test
+        @DisplayName("A human riffle shuffle should not produce the same full order as a perfect riffle")
+        void shouldNotProduceSameOrderAsPerfectRiffle() {
+            var humanDeck = DeckFactory.standardDeck();
+            var perfectDeck = DeckFactory.standardDeck();
 
-        var random = RandomGeneratorFactory
-                .of("L64X128MixRandom")
-                .create(42);
+            var random = RandomGeneratorFactory
+                    .of("L64X128MixRandom")
+                    .create(42);
 
-        operation.apply(deck, random);
+            var humanOperation = new RiffleShuffleOperation(
+                    new BalancedDeckSplitter(0),
+                    new HumanRiffleInterleaver(3)
+            );
 
-        assertThat(deck.get(0)).isEqualTo(original.get(0));
-        assertThat(deck.get(1)).isEqualTo(original.get(26));
-        assertThat(deck.get(2)).isEqualTo(original.get(1));
-        assertThat(deck.get(3)).isEqualTo(original.get(27));
-        assertThat(deck).hasSize(52);
+            var perfectOperation = new RiffleShuffleOperation(
+                    new BalancedDeckSplitter(0),
+                    new PerfectRiffleInterleaver()
+            );
+
+            humanOperation.apply(humanDeck, random);
+
+            perfectOperation.apply(
+                    perfectDeck,
+                    RandomGeneratorFactory.of("L64X128MixRandom").create(42)
+            );
+
+            assertThat(humanDeck).isNotEqualTo(perfectDeck);
+        }
     }
 }
