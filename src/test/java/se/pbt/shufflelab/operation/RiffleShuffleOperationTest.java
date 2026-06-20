@@ -3,6 +3,7 @@ package se.pbt.shufflelab.operation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import se.pbt.shufflelab.TestRandoms;
 import se.pbt.shufflelab.card.DeckFactory;
 import se.pbt.shufflelab.operation.riffle.HumanRiffleInterleaver;
 import se.pbt.shufflelab.operation.riffle.PerfectRiffleInterleaver;
@@ -10,7 +11,6 @@ import se.pbt.shufflelab.split.BalancedDeckSplitter;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.random.RandomGeneratorFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,9 +32,7 @@ class RiffleShuffleOperationTest {
                     new PerfectRiffleInterleaver()
             );
 
-            var random = RandomGeneratorFactory
-                    .of("L64X128MixRandom")
-                    .create(42);
+            var random = TestRandoms.fixedRandom();
 
             operation.apply(deck, random);
 
@@ -53,9 +51,7 @@ class RiffleShuffleOperationTest {
                     new PerfectRiffleInterleaver()
             );
 
-            var random = RandomGeneratorFactory
-                    .of("L64X128MixRandom")
-                    .create(42);
+            var random = TestRandoms.fixedRandom();
 
             operation.apply(deck, random);
 
@@ -73,9 +69,7 @@ class RiffleShuffleOperationTest {
                     new PerfectRiffleInterleaver()
             );
 
-            var random = RandomGeneratorFactory
-                    .of("L64X128MixRandom")
-                    .create(42);
+            var random = TestRandoms.fixedRandom();
 
             operation.apply(deck, random);
 
@@ -101,9 +95,7 @@ class RiffleShuffleOperationTest {
                     new HumanRiffleInterleaver(3)
             );
 
-            var random = RandomGeneratorFactory
-                    .of("L64X128MixRandom")
-                    .create(42);
+            var random = TestRandoms.fixedRandom();
 
             operation.apply(deck, random);
 
@@ -122,9 +114,7 @@ class RiffleShuffleOperationTest {
                     new HumanRiffleInterleaver(3)
             );
 
-            var random = RandomGeneratorFactory
-                    .of("L64X128MixRandom")
-                    .create(42);
+            var random = TestRandoms.fixedRandom();
 
             operation.apply(deck, random);
 
@@ -137,9 +127,7 @@ class RiffleShuffleOperationTest {
             var humanDeck = DeckFactory.standardDeck();
             var perfectDeck = DeckFactory.standardDeck();
 
-            var random = RandomGeneratorFactory
-                    .of("L64X128MixRandom")
-                    .create(42);
+            var random =  TestRandoms.fixedRandom();
 
             var humanOperation = new RiffleShuffleOperation(
                     new BalancedDeckSplitter(0),
@@ -155,7 +143,7 @@ class RiffleShuffleOperationTest {
 
             perfectOperation.apply(
                     perfectDeck,
-                    RandomGeneratorFactory.of("L64X128MixRandom").create(42)
+                    TestRandoms.fixedRandom()
             );
 
             assertThat(humanDeck).isNotEqualTo(perfectDeck);

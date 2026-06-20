@@ -2,12 +2,12 @@ package se.pbt.shufflelab.split;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import se.pbt.shufflelab.TestRandoms;
 import se.pbt.shufflelab.card.DeckFactory;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.random.RandomGeneratorFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -20,7 +20,7 @@ class BalancedDeckSplitterTest {
     void shouldSplitDeckIntoTwoPackets() {
         var deck = DeckFactory.standardDeck();
         var splitter = new BalancedDeckSplitter(4);
-        var random = RandomGeneratorFactory.of("L64X128MixRandom").create(42);
+        var random = TestRandoms.fixedRandom();
 
         var packets = splitter.split(deck, random);
 
@@ -32,7 +32,7 @@ class BalancedDeckSplitterTest {
     void shouldPreserveAllCards() {
         var deck = DeckFactory.standardDeck();
         var splitter = new BalancedDeckSplitter(4);
-        var random = RandomGeneratorFactory.of("L64X128MixRandom").create(42);
+        var random = TestRandoms.fixedRandom();
 
         var packets = splitter.split(deck, random);
 
@@ -48,7 +48,7 @@ class BalancedDeckSplitterTest {
     void shouldCreateReasonablyBalancedPackets() {
         var deck = DeckFactory.standardDeck();
         var splitter = new BalancedDeckSplitter(4);
-        var random = RandomGeneratorFactory.of("L64X128MixRandom").create(42);
+        var random = TestRandoms.fixedRandom();
 
         var packets = splitter.split(deck, random);
 
@@ -61,7 +61,7 @@ class BalancedDeckSplitterTest {
     void shouldPreserveTotalCardCount() {
         var deck = DeckFactory.standardDeck();
         var splitter = new BalancedDeckSplitter(4);
-        var random = RandomGeneratorFactory.of("L64X128MixRandom").create(42);
+        var random = TestRandoms.fixedRandom();
 
         var packets = splitter.split(deck, random);
 
@@ -77,7 +77,7 @@ class BalancedDeckSplitterTest {
     void shouldKeepOriginalOrderAcrossPackets() {
         var deck = DeckFactory.standardDeck();
         var splitter = new BalancedDeckSplitter(4);
-        var random = RandomGeneratorFactory.of("L64X128MixRandom").create(42);
+        var random = TestRandoms.fixedRandom();
 
         var packets = splitter.split(deck, random);
 
@@ -94,7 +94,7 @@ class BalancedDeckSplitterTest {
         var deck = DeckFactory.standardDeck();
         var original = List.copyOf(deck);
         var splitter = new BalancedDeckSplitter(4);
-        var random = RandomGeneratorFactory.of("L64X128MixRandom").create(42);
+        var random = TestRandoms.fixedRandom();
 
         splitter.split(deck, random);
 

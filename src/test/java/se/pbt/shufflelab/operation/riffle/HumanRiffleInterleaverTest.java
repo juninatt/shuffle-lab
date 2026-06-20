@@ -2,10 +2,10 @@ package se.pbt.shufflelab.operation.riffle;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import se.pbt.shufflelab.TestRandoms;
 import se.pbt.shufflelab.card.DeckFactory;
 
 import java.util.HashSet;
-import java.util.random.RandomGeneratorFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -22,7 +22,7 @@ class HumanRiffleInterleaverTest {
         var right = deck.subList(26, 52);
 
         var interleaver = new HumanRiffleInterleaver(3);
-        var random = RandomGeneratorFactory.of("L64X128MixRandom").create(42);
+        var random = TestRandoms.fixedRandom();
 
         var result = interleaver.interleave(left, right, random);
 
@@ -47,7 +47,7 @@ class HumanRiffleInterleaverTest {
         var right = deck.subList(26, 52);
 
         var interleaver = new HumanRiffleInterleaver(3);
-        var random = RandomGeneratorFactory.of("L64X128MixRandom").create(42);
+        var random = TestRandoms.fixedRandom();
 
         var result = interleaver.interleave(left, right, random);
 

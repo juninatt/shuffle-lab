@@ -2,9 +2,8 @@ package se.pbt.shufflelab.operation.riffle;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import se.pbt.shufflelab.TestRandoms;
 import se.pbt.shufflelab.card.DeckFactory;
-
-import java.util.random.RandomGeneratorFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -25,7 +24,7 @@ class PerfectRiffleInterleaverTest {
         var result = interleaver.interleave(
                 left,
                 right,
-                RandomGeneratorFactory.of("L64X128MixRandom").create(42)
+                TestRandoms.fixedRandom()
         );
 
         assertThat(result.get(0)).isEqualTo(left.get(0));
@@ -47,7 +46,7 @@ class PerfectRiffleInterleaverTest {
         var result = interleaver.interleave(
                 left,
                 right,
-                RandomGeneratorFactory.of("L64X128MixRandom").create(42)
+                TestRandoms.fixedRandom()
         );
 
         assertThat(result).containsExactlyInAnyOrderElementsOf(deck);
@@ -66,7 +65,7 @@ class PerfectRiffleInterleaverTest {
         var result = interleaver.interleave(
                 left,
                 right,
-                RandomGeneratorFactory.of("L64X128MixRandom").create(42)
+                TestRandoms.fixedRandom()
         );
 
         assertThat(result.indexOf(left.get(0)))
@@ -92,13 +91,13 @@ class PerfectRiffleInterleaverTest {
         var first = interleaver.interleave(
                 left,
                 right,
-                RandomGeneratorFactory.of("L64X128MixRandom").create(42)
+                TestRandoms.fixedRandom()
         );
 
         var second = interleaver.interleave(
                 left,
                 right,
-                RandomGeneratorFactory.of("L64X128MixRandom").create(999)
+                TestRandoms.seededRandom(999)
         );
 
         assertThat(first).isEqualTo(second);
@@ -117,7 +116,7 @@ class PerfectRiffleInterleaverTest {
         assertThatThrownBy(() -> interleaver.interleave(
                 left,
                 right,
-                RandomGeneratorFactory.of("L64X128MixRandom").create(42)
+                TestRandoms.fixedRandom()
         ))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Packet imbalance is too large for this riffle shuffle");
