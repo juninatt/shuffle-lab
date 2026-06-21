@@ -13,17 +13,17 @@ public final class RifflePacketValidator {
     }
 
     public static void validate(
-            List<Card> left,
-            List<Card> right,
+            List<Card> top,
+            List<Card> bottom,
             double maxImbalanceRatio) {
 
-        if (left.isEmpty() || right.isEmpty()) {
+        if (top.isEmpty() || bottom.isEmpty()) {
             throw new IllegalArgumentException(
                     "A riffle shuffle requires two non-empty packets");
         }
 
-        int totalSize = left.size() + right.size();
-        int sizeDifference = Math.abs(left.size() - right.size());
+        int totalSize = top.size() + bottom.size();
+        int sizeDifference = Math.abs(top.size() - bottom.size());
         double imbalanceRatio = (double) sizeDifference / totalSize;
 
         if (imbalanceRatio > maxImbalanceRatio) {
