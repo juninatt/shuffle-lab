@@ -8,7 +8,15 @@ import java.util.List;
 import java.util.random.RandomGenerator;
 
 /**
- * Simulates a riffle shuffle by splitting the deck and interleaving the packets.
+ * Simulates a riffle shuffle.
+ *
+ * <p>A riffle shuffle is performed by splitting a deck into two packets
+ * and interleaving cards from both packets into a single deck. It is one
+ * of the most common and effective card shuffling techniques.</p>
+ *
+ * <p>The exact behavior depends on the supplied {@link DeckSplitter} and
+ * {@link Interleaver} implementations. For example, the shuffle may be
+ * performed as a perfect riffle or a more realistic human riffle.</p>
  */
 public class RiffleShuffle implements Shuffle {
 
@@ -23,17 +31,23 @@ public class RiffleShuffle implements Shuffle {
         this.interleaver = interleaver;
     }
 
+    /**
+     * Applies a riffle shuffle to the given deck.
+     *
+     * @param deck the deck to shuffle
+     * @param random a source of controlled randomness
+     */
     @Override
     public void apply(List<Card> deck, RandomGenerator random) {
         List<List<Card>> packets = splitter.split(deck, random);
 
-        List<Card> shuffled = interleaver.interleave(
+        List<Card> shuffledDeck = interleaver.interleave(
                 packets.get(0),
                 packets.get(1),
                 random
         );
 
         deck.clear();
-        deck.addAll(shuffled);
+        deck.addAll(shuffledDeck);
     }
 }
