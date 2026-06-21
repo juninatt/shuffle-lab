@@ -6,20 +6,21 @@ import java.util.List;
 import java.util.random.RandomGenerator;
 
 /**
- * Defines how two card packets are interleaved during a riffle shuffle.
+ * Defines how two packets are woven together into a single deck.
  */
 public interface Interleaver {
+
 
     /**
      * Interleaves two packets into a single deck.
      *
-     * @param left the first packet
-     * @param right the second packet
+     * @param topPacket the packet originating from the top portion of the deck
+     * @param bottomPacket the packet originating from the bottom portion of the deck
      * @param random a source of controlled randomness
      * @return the interleaved cards
      */
     List<Card> interleave(
-            List<Card> left,
-            List<Card> right,
+            List<Card> topPacket,
+            List<Card> bottomPacket,
             RandomGenerator random);
 }

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
 import se.pbt.shufflelab.card.DeckFactory;
+import se.pbt.shufflelab.operation.interleave.InterleaveStart;
 import se.pbt.shufflelab.operation.interleave.HumanInterleaver;
 import se.pbt.shufflelab.operation.interleave.PerfectInterleaver;
 import se.pbt.shufflelab.operation.split.BalancedDeckSplitter;
@@ -29,7 +30,7 @@ class RiffleShuffleTest {
 
             var operation = new RiffleShuffle(
                     new BalancedDeckSplitter(0),
-                    new PerfectInterleaver()
+                    new PerfectInterleaver(InterleaveStart.BOTTOM)
             );
 
             var random = TestRandoms.fixedRandom();
@@ -48,7 +49,7 @@ class RiffleShuffleTest {
 
             var operation = new RiffleShuffle(
                     new BalancedDeckSplitter(0),
-                    new PerfectInterleaver()
+                    new PerfectInterleaver(InterleaveStart.BOTTOM)
             );
 
             var random = TestRandoms.fixedRandom();
@@ -73,9 +74,9 @@ class RiffleShuffleTest {
 
             operation.apply(deck, random);
 
-            assertThat(deck.get(0)).isEqualTo(original.get(0));
-            assertThat(deck.get(1)).isEqualTo(original.get(26));
-            assertThat(deck.get(2)).isEqualTo(original.get(1));
+            assertThat(deck.get(0)).withFailMessage("Top card should be unchanged").isEqualTo(original.get(0));
+            assertThat(deck.get(1)).withFailMessage("Second card should be first card of top packet").isEqualTo(original.get(26));
+            assertThat(deck.get(2)).withFailMessage("This card should be ").isEqualTo(original.get(1));
             assertThat(deck.get(3)).isEqualTo(original.get(27));
         }
     }
@@ -92,7 +93,7 @@ class RiffleShuffleTest {
 
             var operation = new RiffleShuffle(
                     new BalancedDeckSplitter(3),
-                    new HumanInterleaver(3)
+                    new HumanInterleaver(InterleaveStart.BOTTOM, 3)
             );
 
             var random = TestRandoms.fixedRandom();
@@ -111,7 +112,7 @@ class RiffleShuffleTest {
 
             var operation = new RiffleShuffle(
                     new BalancedDeckSplitter(3),
-                    new HumanInterleaver(3)
+                    new HumanInterleaver(InterleaveStart.BOTTOM, 3)
             );
 
             var random = TestRandoms.fixedRandom();
@@ -131,12 +132,12 @@ class RiffleShuffleTest {
 
             var humanOperation = new RiffleShuffle(
                     new BalancedDeckSplitter(0),
-                    new HumanInterleaver(3)
+                    new HumanInterleaver(InterleaveStart.BOTTOM, 3)
             );
 
             var perfectOperation = new RiffleShuffle(
                     new BalancedDeckSplitter(0),
-                    new PerfectInterleaver()
+                    new PerfectInterleaver(InterleaveStart.BOTTOM)
             );
 
             humanOperation.apply(humanDeck, random);

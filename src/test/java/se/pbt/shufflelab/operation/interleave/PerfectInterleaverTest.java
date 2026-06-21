@@ -1,6 +1,7 @@
 package se.pbt.shufflelab.operation.interleave;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
 import se.pbt.shufflelab.card.DeckFactory;
@@ -16,21 +17,21 @@ class PerfectInterleaverTest {
     void shouldAlternateCardsFromBothPackets() {
         var deck = DeckFactory.standardDeck();
 
-        var left = deck.subList(0, 26);
-        var right = deck.subList(26, 52);
+        var top = deck.subList(0, 26);
+        var bottom = deck.subList(26, 52);
 
-        var interleaver = new PerfectInterleaver();
+        var interleaver = new PerfectInterleaver(InterleaveStart.TOP);
 
         var result = interleaver.interleave(
-                left,
-                right,
+                top,
+                bottom,
                 TestRandoms.fixedRandom()
         );
 
-        assertThat(result.get(0)).isEqualTo(left.get(0));
-        assertThat(result.get(1)).isEqualTo(right.get(0));
-        assertThat(result.get(2)).isEqualTo(left.get(1));
-        assertThat(result.get(3)).isEqualTo(right.get(1));
+        assertThat(result.get(0)).isEqualTo(top.get(0));
+        assertThat(result.get(1)).isEqualTo(bottom.get(0));
+        assertThat(result.get(2)).isEqualTo(top.get(1));
+        assertThat(result.get(3)).isEqualTo(bottom.get(1));
     }
 
     @Test
@@ -38,14 +39,14 @@ class PerfectInterleaverTest {
     void shouldPreserveAllCards() {
         var deck = DeckFactory.standardDeck();
 
-        var left = deck.subList(0, 26);
-        var right = deck.subList(26, 52);
+        var top = deck.subList(0, 26);
+        var bottom = deck.subList(26, 52);
 
-        var interleaver = new PerfectInterleaver();
+        var interleaver = new PerfectInterleaver(InterleaveStart.BOTTOM);
 
         var result = interleaver.interleave(
-                left,
-                right,
+                top,
+                bottom,
                 TestRandoms.fixedRandom()
         );
 
@@ -57,25 +58,25 @@ class PerfectInterleaverTest {
     void shouldPreserveOrderWithinPackets() {
         var deck = DeckFactory.standardDeck();
 
-        var left = deck.subList(0, 26);
-        var right = deck.subList(26, 52);
+        var top = deck.subList(0, 26);
+        var bottom = deck.subList(26, 52);
 
-        var interleaver = new PerfectInterleaver();
+        var interleaver = new PerfectInterleaver(InterleaveStart.BOTTOM);
 
         var result = interleaver.interleave(
-                left,
-                right,
+                top,
+                bottom,
                 TestRandoms.fixedRandom()
         );
 
-        assertThat(result.indexOf(left.get(0)))
-                .isLessThan(result.indexOf(left.get(1)));
+        assertThat(result.indexOf(top.get(0)))
+                .isLessThan(result.indexOf(top.get(1)));
 
-        assertThat(result.indexOf(left.get(1)))
-                .isLessThan(result.indexOf(left.get(2)));
+        assertThat(result.indexOf(top.get(1)))
+                .isLessThan(result.indexOf(top.get(2)));
 
-        assertThat(result.indexOf(right.get(0)))
-                .isLessThan(result.indexOf(right.get(1)));
+        assertThat(result.indexOf(bottom.get(0)))
+                .isLessThan(result.indexOf(bottom.get(1)));
     }
 
     @Test
@@ -83,20 +84,20 @@ class PerfectInterleaverTest {
     void shouldProduceDeterministicResult() {
         var deck = DeckFactory.standardDeck();
 
-        var left = deck.subList(0, 26);
-        var right = deck.subList(26, 52);
+        var top = deck.subList(0, 26);
+        var bottom = deck.subList(26, 52);
 
-        var interleaver = new PerfectInterleaver();
+        var interleaver = new PerfectInterleaver(InterleaveStart.BOTTOM);
 
         var first = interleaver.interleave(
-                left,
-                right,
+                top,
+                bottom,
                 TestRandoms.fixedRandom()
         );
 
         var second = interleaver.interleave(
-                left,
-                right,
+                top,
+                bottom,
                 TestRandoms.seededRandom(999)
         );
 
@@ -108,17 +109,78 @@ class PerfectInterleaverTest {
     void shouldRejectPacketsWithTooMuchImbalance() {
         var deck = DeckFactory.standardDeck();
 
-        var left = deck.subList(0, 3);
-        var right = deck.subList(3, 8);
+        var top = deck.subList(0, 3);
+        var bottom = deck.subList(3, 8);
 
-        var interleaver = new PerfectInterleaver();
+        var interleaver = new PerfectInterleaver(InterleaveStart.BOTTOM);
 
         assertThatThrownBy(() -> interleaver.interleave(
-                left,
-                right,
+                top,
+                bottom,
                 TestRandoms.fixedRandom()
         ))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Packet imbalance is too large for this riffle shuffle");
+    }
+
+    @Nested
+    @DisplayName("Interleave start behavior")
+    class FaroTypeBehavior {
+
+        @Test
+        @DisplayName("An interleave starting from the top packet should begin with a card from the top packet")
+        void shouldStartWithTopPacket() {
+            var deck = DeckFactory.standardDeck();
+
+            var top = deck.subList(0, 26);
+            var bottom = deck.subList(26, 52);
+
+            var result = new PerfectInterleaver()
+                    .interleave(top, bottom, TestRandoms.fixedRandom());
+
+            assertThat(result.getFirst()).isEqualTo(top.getFirst());
+        }
+
+        @Test
+        @DisplayName("An interleave starting from the bottom packet should begin with a card from the bottom packet")
+        void shouldStartWithBottomPacket() {
+            var deck = DeckFactory.standardDeck();
+
+            var top = deck.subList(0, 26);
+            var bottom = deck.subList(26, 52);
+
+            var result = new PerfectInterleaver(InterleaveStart.BOTTOM)
+                    .interleave(top, bottom, TestRandoms.fixedRandom());
+
+            assertThat(result.getFirst()).isEqualTo(bottom.getFirst());
+        }
+
+        @Test
+        @DisplayName("An interleave starting from the top packet should end with a card from the bottom packet")
+        void shouldEndWithBottomPacket() {
+            var deck = DeckFactory.standardDeck();
+
+            var topPacket = deck.subList(0, 26);
+            var bottomPacket = deck.subList(26, 52);
+
+            var result = new PerfectInterleaver()
+                    .interleave(topPacket, bottomPacket, TestRandoms.fixedRandom());
+
+            assertThat(result.getLast()).isEqualTo(bottomPacket.getLast());
+        }
+
+        @Test
+        @DisplayName("An interleave starting from the bottom packet should end with a card from the top packet")
+        void shouldEndWithTopPacket() {
+            var deck = DeckFactory.standardDeck();
+
+            var topPacket = deck.subList(0, 26);
+            var bottomPacket = deck.subList(26, 52);
+
+            var result = new PerfectInterleaver(InterleaveStart.BOTTOM)
+                    .interleave(topPacket, bottomPacket, TestRandoms.fixedRandom());
+
+            assertThat(result.getLast()).isEqualTo(topPacket.getLast());
+        }
     }
 }

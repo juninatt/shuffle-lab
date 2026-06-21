@@ -20,14 +20,14 @@ import java.util.random.RandomGenerator;
  */
 public class RiffleShuffle implements Shuffle {
 
-    private final DeckSplitter splitter;
+    private final DeckSplitter deckSplitter;
     private final Interleaver interleaver;
 
     public RiffleShuffle(
-            DeckSplitter splitter,
+            DeckSplitter deckSplitter,
             Interleaver interleaver) {
 
-        this.splitter = splitter;
+        this.deckSplitter = deckSplitter;
         this.interleaver = interleaver;
     }
 
@@ -39,7 +39,7 @@ public class RiffleShuffle implements Shuffle {
      */
     @Override
     public void apply(List<Card> deck, RandomGenerator random) {
-        List<List<Card>> packets = splitter.split(deck, random);
+        List<List<Card>> packets = deckSplitter.split(deck, random);
 
         List<Card> shuffledDeck = interleaver.interleave(
                 packets.get(0),

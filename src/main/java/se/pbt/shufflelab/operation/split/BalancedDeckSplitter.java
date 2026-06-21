@@ -44,9 +44,9 @@ public class BalancedDeckSplitter implements DeckSplitter {
         int max = Math.min(deck.size() - 1, middle + tolerance);
         int splitIndex = random.nextInt(min, max + 1);
 
-        List<Card> firstPacket = new ArrayList<>(deck.subList(0, splitIndex));
-        List<Card> secondPacket = new ArrayList<>(deck.subList(splitIndex, deck.size()));
+        List<Card> topPacket = new ArrayList<>(deck.subList(0, splitIndex));
+        List<Card> bottomPacket = new ArrayList<>(deck.subList(splitIndex, deck.size()));
 
-        return List.of(firstPacket, secondPacket);
+        return List.of(topPacket, bottomPacket);
     }
 }

@@ -13,10 +13,10 @@ import java.util.random.RandomGenerator;
  */
 public class CutDeckOperation implements Shuffle {
 
-    private final DeckSplitter splitter;
+    private final DeckSplitter deckSplitter;
 
-    public CutDeckOperation(DeckSplitter splitter) {
-        this.splitter = splitter;
+    public CutDeckOperation(DeckSplitter deckSplitter) {
+        this.deckSplitter = deckSplitter;
     }
 
     /**
@@ -27,7 +27,7 @@ public class CutDeckOperation implements Shuffle {
      */
     @Override
     public void apply(List<Card> deck, RandomGenerator random) {
-        List<List<Card>> packets = splitter.split(deck, random);
+        List<List<Card>> packets = deckSplitter.split(deck, random);
 
         List<Card> topPacket = packets.get(0);
         List<Card> bottomPacket = packets.get(1);
