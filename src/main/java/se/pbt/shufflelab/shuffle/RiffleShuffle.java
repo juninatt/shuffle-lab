@@ -1,8 +1,8 @@
-package se.pbt.shufflelab.operation;
+package se.pbt.shufflelab.shuffle;
 
 import se.pbt.shufflelab.card.Card;
-import se.pbt.shufflelab.operation.riffle.RiffleInterleaver;
-import se.pbt.shufflelab.split.DeckSplitter;
+import se.pbt.shufflelab.operation.split.DeckSplitter;
+import se.pbt.shufflelab.operation.interleave.Interleaver;
 
 import java.util.List;
 import java.util.random.RandomGenerator;
@@ -10,14 +10,14 @@ import java.util.random.RandomGenerator;
 /**
  * Simulates a riffle shuffle by splitting the deck and interleaving the packets.
  */
-public class RiffleShuffleOperation implements ShuffleOperation {
+public class RiffleShuffle implements Shuffle {
 
     private final DeckSplitter splitter;
-    private final RiffleInterleaver interleaver;
+    private final Interleaver interleaver;
 
-    public RiffleShuffleOperation(
+    public RiffleShuffle(
             DeckSplitter splitter,
-            RiffleInterleaver interleaver) {
+            Interleaver interleaver) {
 
         this.splitter = splitter;
         this.interleaver = interleaver;

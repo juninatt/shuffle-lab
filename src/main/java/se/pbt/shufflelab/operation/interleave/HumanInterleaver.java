@@ -1,6 +1,7 @@
-package se.pbt.shufflelab.operation.riffle;
+package se.pbt.shufflelab.operation.interleave;
 
 import se.pbt.shufflelab.card.Card;
+import se.pbt.shufflelab.validation.RifflePacketValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +10,11 @@ import java.util.random.RandomGenerator;
 /**
  * Interleaves two packets by dropping small groups of cards from each packet.
  */
-public class HumanRiffleInterleaver implements RiffleInterleaver {
+public class HumanInterleaver implements Interleaver {
 
     private final int maxDropSize;
 
-    public HumanRiffleInterleaver(int maxDropSize) {
+    public HumanInterleaver(int maxDropSize) {
         if (maxDropSize < 1) {
             throw new IllegalArgumentException("maxDropSize must be at least 1");
         }

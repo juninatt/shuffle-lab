@@ -1,4 +1,4 @@
-package se.pbt.shufflelab.operation.riffle;
+package se.pbt.shufflelab.operation.interleave;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,18 +8,18 @@ import se.pbt.shufflelab.card.DeckFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@DisplayName("Perfect riffle interleaver")
-class PerfectRiffleInterleaverTest {
+@DisplayName("Perfect interleaver")
+class PerfectInterleaverTest {
 
     @Test
-    @DisplayName("A perfect riffle should alternate cards from both packets")
+    @DisplayName("A perfect interleave should alternate cards from both packets")
     void shouldAlternateCardsFromBothPackets() {
         var deck = DeckFactory.standardDeck();
 
         var left = deck.subList(0, 26);
         var right = deck.subList(26, 52);
 
-        var interleaver = new PerfectRiffleInterleaver();
+        var interleaver = new PerfectInterleaver();
 
         var result = interleaver.interleave(
                 left,
@@ -34,14 +34,14 @@ class PerfectRiffleInterleaverTest {
     }
 
     @Test
-    @DisplayName("A perfect riffle should keep every card from both packets")
+    @DisplayName("A perfect interleave should keep every card from both packets")
     void shouldPreserveAllCards() {
         var deck = DeckFactory.standardDeck();
 
         var left = deck.subList(0, 26);
         var right = deck.subList(26, 52);
 
-        var interleaver = new PerfectRiffleInterleaver();
+        var interleaver = new PerfectInterleaver();
 
         var result = interleaver.interleave(
                 left,
@@ -53,14 +53,14 @@ class PerfectRiffleInterleaverTest {
     }
 
     @Test
-    @DisplayName("A perfect riffle should preserve the order within each packet")
+    @DisplayName("A perfect interleave should preserve the order within each packet")
     void shouldPreserveOrderWithinPackets() {
         var deck = DeckFactory.standardDeck();
 
         var left = deck.subList(0, 26);
         var right = deck.subList(26, 52);
 
-        var interleaver = new PerfectRiffleInterleaver();
+        var interleaver = new PerfectInterleaver();
 
         var result = interleaver.interleave(
                 left,
@@ -79,14 +79,14 @@ class PerfectRiffleInterleaverTest {
     }
 
     @Test
-    @DisplayName("A perfect riffle should produce the same result regardless of random generator")
+    @DisplayName("A perfect interleave should produce the same result regardless of random generator")
     void shouldProduceDeterministicResult() {
         var deck = DeckFactory.standardDeck();
 
         var left = deck.subList(0, 26);
         var right = deck.subList(26, 52);
 
-        var interleaver = new PerfectRiffleInterleaver();
+        var interleaver = new PerfectInterleaver();
 
         var first = interleaver.interleave(
                 left,
@@ -104,14 +104,14 @@ class PerfectRiffleInterleaverTest {
     }
 
     @Test
-    @DisplayName("A perfect riffle should reject packets with too much imbalance")
+    @DisplayName("A perfect interleave should reject packets with too much imbalance")
     void shouldRejectPacketsWithTooMuchImbalance() {
         var deck = DeckFactory.standardDeck();
 
         var left = deck.subList(0, 3);
         var right = deck.subList(3, 8);
 
-        var interleaver = new PerfectRiffleInterleaver();
+        var interleaver = new PerfectInterleaver();
 
         assertThatThrownBy(() -> interleaver.interleave(
                 left,

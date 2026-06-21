@@ -1,6 +1,7 @@
-package se.pbt.shufflelab.operation.riffle;
+package se.pbt.shufflelab.operation.interleave;
 
 import se.pbt.shufflelab.card.Card;
+import se.pbt.shufflelab.validation.RifflePacketValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.random.RandomGenerator;
 /**
  * Interleaves two packets by alternating one card from each packet.
  */
-public class PerfectRiffleInterleaver implements RiffleInterleaver {
+public class PerfectInterleaver implements Interleaver {
 
     @Override
     public List<Card> interleave(

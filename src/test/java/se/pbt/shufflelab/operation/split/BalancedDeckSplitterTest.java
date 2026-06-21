@@ -1,4 +1,4 @@
-package se.pbt.shufflelab.split;
+package se.pbt.shufflelab.operation.split;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

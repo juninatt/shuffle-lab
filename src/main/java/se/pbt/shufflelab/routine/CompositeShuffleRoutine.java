@@ -1,7 +1,7 @@
 package se.pbt.shufflelab.routine;
 
 import se.pbt.shufflelab.card.Card;
-import se.pbt.shufflelab.operation.ShuffleOperation;
+import se.pbt.shufflelab.shuffle.Shuffle;
 
 import java.util.List;
 import java.util.random.RandomGenerator;
@@ -10,14 +10,14 @@ import java.util.random.RandomGenerator;
  * A shuffle strategy composed of multiple shuffle operations.
  *
  * <p>This strategy acts as a recipe, executing a sequence of
- * {@link ShuffleOperation}s in the order they were defined.
+ * {@link Shuffle}s in the order they were defined.
  * It can be used to model real-world shuffling techniques,
  * such as repeatedly cutting and riffle shuffling a deck.</p>
  */
 public class CompositeShuffleRoutine implements ShuffleRoutine {
 
     private final String name;
-    private final List<ShuffleOperation> operations;
+    private final List<Shuffle> operations;
 
     /**
      * Creates a new shuffle strategy consisting of the given operations.
@@ -27,7 +27,7 @@ public class CompositeShuffleRoutine implements ShuffleRoutine {
      */
     public CompositeShuffleRoutine(
             String name,
-            List<ShuffleOperation> operations) {
+            List<Shuffle> operations) {
 
         this.name = name;
         this.operations = List.copyOf(operations);
@@ -41,7 +41,7 @@ public class CompositeShuffleRoutine implements ShuffleRoutine {
      */
     @Override
     public void shuffle(List<Card> deck, RandomGenerator random) {
-        for (ShuffleOperation operation : operations) {
+        for (Shuffle operation : operations) {
             operation.apply(deck, random);
         }
     }

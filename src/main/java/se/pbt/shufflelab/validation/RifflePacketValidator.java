@@ -1,4 +1,4 @@
-package se.pbt.shufflelab.operation.riffle;
+package se.pbt.shufflelab.validation;
 
 import se.pbt.shufflelab.card.Card;
 
@@ -7,12 +7,12 @@ import java.util.List;
 /**
  * Validates that two packets are suitable for a riffle shuffle.
  */
-final class RifflePacketValidator {
+public final class RifflePacketValidator {
 
-    private RifflePacketValidator() {
+    public RifflePacketValidator() {
     }
 
-    static void validate(
+    public static void validate(
             List<Card> left,
             List<Card> right,
             double maxImbalanceRatio) {

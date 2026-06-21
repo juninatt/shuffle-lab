@@ -1,4 +1,4 @@
-package se.pbt.shufflelab.split;
+package se.pbt.shufflelab.operation.split;
 
 import se.pbt.shufflelab.card.Card;
 

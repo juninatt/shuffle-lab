@@ -1,4 +1,4 @@
-package se.pbt.shufflelab.operation;
+package se.pbt.shufflelab.shuffle;
 
 import se.pbt.shufflelab.card.Card;
 import se.pbt.shufflelab.routine.ShuffleRoutine;
@@ -14,7 +14,7 @@ import java.util.random.RandomGenerator;
  * Multiple operations can be combined to form a complete
  * {@link ShuffleRoutine}.</p>
  */
-public interface ShuffleOperation {
+public interface Shuffle {
 
     /**
      * Applies this operation to the given deck.

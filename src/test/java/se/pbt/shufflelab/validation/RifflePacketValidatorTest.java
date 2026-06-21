@@ -1,4 +1,4 @@
-package se.pbt.shufflelab.operation.riffle;
+package se.pbt.shufflelab.validation;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

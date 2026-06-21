@@ -1,7 +1,8 @@
 package se.pbt.shufflelab.operation;
 
 import se.pbt.shufflelab.card.Card;
-import se.pbt.shufflelab.split.DeckSplitter;
+import se.pbt.shufflelab.shuffle.Shuffle;
+import se.pbt.shufflelab.operation.split.DeckSplitter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.random.RandomGenerator;
 /**
  * Simulates cutting a deck by moving the top packet below the bottom packet.
  */
-public class CutDeckOperation implements ShuffleOperation {
+public class CutDeckOperation implements Shuffle {
 
     private final DeckSplitter splitter;
 

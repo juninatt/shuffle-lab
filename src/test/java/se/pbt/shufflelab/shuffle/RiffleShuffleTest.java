@@ -1,13 +1,13 @@
-package se.pbt.shufflelab.operation;
+package se.pbt.shufflelab.shuffle;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
 import se.pbt.shufflelab.card.DeckFactory;
-import se.pbt.shufflelab.operation.riffle.HumanRiffleInterleaver;
-import se.pbt.shufflelab.operation.riffle.PerfectRiffleInterleaver;
-import se.pbt.shufflelab.split.BalancedDeckSplitter;
+import se.pbt.shufflelab.operation.interleave.HumanInterleaver;
+import se.pbt.shufflelab.operation.interleave.PerfectInterleaver;
+import se.pbt.shufflelab.operation.split.BalancedDeckSplitter;
 
 import java.util.HashSet;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Riffle shuffle operation")
-class RiffleShuffleOperationTest {
+class RiffleShuffleTest {
 
     @Nested
     @DisplayName("Perfect riffle behavior")
@@ -27,9 +27,9 @@ class RiffleShuffleOperationTest {
             var deck = DeckFactory.standardDeck();
             var originalCards = new HashSet<>(deck);
 
-            var operation = new RiffleShuffleOperation(
+            var operation = new RiffleShuffle(
                     new BalancedDeckSplitter(0),
-                    new PerfectRiffleInterleaver()
+                    new PerfectInterleaver()
             );
 
             var random = TestRandoms.fixedRandom();
@@ -46,9 +46,9 @@ class RiffleShuffleOperationTest {
             var deck = DeckFactory.standardDeck();
             var original = List.copyOf(deck);
 
-            var operation = new RiffleShuffleOperation(
+            var operation = new RiffleShuffle(
                     new BalancedDeckSplitter(0),
-                    new PerfectRiffleInterleaver()
+                    new PerfectInterleaver()
             );
 
             var random = TestRandoms.fixedRandom();
@@ -64,9 +64,9 @@ class RiffleShuffleOperationTest {
             var deck = DeckFactory.standardDeck();
             var original = List.copyOf(deck);
 
-            var operation = new RiffleShuffleOperation(
+            var operation = new RiffleShuffle(
                     new BalancedDeckSplitter(0),
-                    new PerfectRiffleInterleaver()
+                    new PerfectInterleaver()
             );
 
             var random = TestRandoms.fixedRandom();
@@ -82,7 +82,7 @@ class RiffleShuffleOperationTest {
 
     @Nested
     @DisplayName("Human riffle behavior")
-    class HumanRiffleBehavior {
+    class HumanInterleaverBehavior {
 
         @Test
         @DisplayName("A human riffle shuffle should keep every card in the deck")
@@ -90,9 +90,9 @@ class RiffleShuffleOperationTest {
             var deck = DeckFactory.standardDeck();
             var originalCards = new HashSet<>(deck);
 
-            var operation = new RiffleShuffleOperation(
+            var operation = new RiffleShuffle(
                     new BalancedDeckSplitter(3),
-                    new HumanRiffleInterleaver(3)
+                    new HumanInterleaver(3)
             );
 
             var random = TestRandoms.fixedRandom();
@@ -109,9 +109,9 @@ class RiffleShuffleOperationTest {
             var deck = DeckFactory.standardDeck();
             var original = List.copyOf(deck);
 
-            var operation = new RiffleShuffleOperation(
+            var operation = new RiffleShuffle(
                     new BalancedDeckSplitter(3),
-                    new HumanRiffleInterleaver(3)
+                    new HumanInterleaver(3)
             );
 
             var random = TestRandoms.fixedRandom();
@@ -129,14 +129,14 @@ class RiffleShuffleOperationTest {
 
             var random =  TestRandoms.fixedRandom();
 
-            var humanOperation = new RiffleShuffleOperation(
+            var humanOperation = new RiffleShuffle(
                     new BalancedDeckSplitter(0),
-                    new HumanRiffleInterleaver(3)
+                    new HumanInterleaver(3)
             );
 
-            var perfectOperation = new RiffleShuffleOperation(
+            var perfectOperation = new RiffleShuffle(
                     new BalancedDeckSplitter(0),
-                    new PerfectRiffleInterleaver()
+                    new PerfectInterleaver()
             );
 
             humanOperation.apply(humanDeck, random);
