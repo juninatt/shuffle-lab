@@ -3,7 +3,7 @@ package se.pbt.shufflelab.validation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.card.Card;
-import se.pbt.shufflelab.card.DeckFactory;
+import se.pbt.shufflelab.deck.DeckFactory;
 
 import java.util.List;
 
@@ -18,11 +18,11 @@ class RifflePacketValidatorTest {
     void shouldAcceptBalancedPackets() {
         var deck = DeckFactory.standardDeck();
 
-        var left = deck.subList(0, 26);
-        var right = deck.subList(26, 52);
+        var top = deck.subList(0, 26);
+        var bottom = deck.subList(26, 52);
 
         assertThatCode(() ->
-                RifflePacketValidator.validate(left, right, 0.10)
+                RifflePacketValidator.validate(top, bottom, 0.10)
         ).doesNotThrowAnyException();
     }
 
@@ -31,11 +31,11 @@ class RifflePacketValidatorTest {
     void shouldAcceptPacketsWithinImbalanceLimit() {
         var deck = DeckFactory.standardDeck();
 
-        var left = deck.subList(0, 24);
-        var right = deck.subList(24, 52);
+        var top = deck.subList(0, 24);
+        var bottom = deck.subList(24, 52);
 
         assertThatCode(() ->
-                RifflePacketValidator.validate(left, right, 0.10)
+                RifflePacketValidator.validate(top, bottom, 0.10)
         ).doesNotThrowAnyException();
     }
 
@@ -44,11 +44,11 @@ class RifflePacketValidatorTest {
     void shouldRejectEmptyLeftPacket() {
         var deck = DeckFactory.standardDeck();
 
-        var left = List.<Card>of();
-        var right = deck.subList(0, 26);
+        var top = List.<Card>of();
+        var bottom = deck.subList(0, 26);
 
         assertThatThrownBy(() ->
-                RifflePacketValidator.validate(left, right, 0.10)
+                RifflePacketValidator.validate(top, bottom, 0.10)
         )
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("A riffle shuffle requires two non-empty packets");
@@ -59,11 +59,11 @@ class RifflePacketValidatorTest {
     void shouldRejectEmptyRightPacket() {
         var deck = DeckFactory.standardDeck();
 
-        var left = deck.subList(0, 26);
-        var right = List.<Card>of();
+        var top = deck.subList(0, 26);
+        var bottom = List.<Card>of();
 
         assertThatThrownBy(() ->
-                RifflePacketValidator.validate(left, right, 0.10)
+                RifflePacketValidator.validate(top, bottom, 0.10)
         )
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("A riffle shuffle requires two non-empty packets");
@@ -74,11 +74,11 @@ class RifflePacketValidatorTest {
     void shouldRejectPacketsWithTooMuchImbalance() {
         var deck = DeckFactory.standardDeck();
 
-        var left = deck.subList(0, 20);
-        var right = deck.subList(20, 52);
+        var top = deck.subList(0, 20);
+        var bottom = deck.subList(20, 52);
 
         assertThatThrownBy(() ->
-                RifflePacketValidator.validate(left, right, 0.10)
+                RifflePacketValidator.validate(top, bottom, 0.10)
         )
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Packet imbalance is too large for this riffle shuffle");
@@ -87,11 +87,11 @@ class RifflePacketValidatorTest {
     @Test
     @DisplayName("Should reject two empty packets")
     void shouldRejectTwoEmptyPackets() {
-        var left = List.<Card>of();
-        var right = List.<Card>of();
+        var top = List.<Card>of();
+        var bottom = List.<Card>of();
 
         assertThatThrownBy(() ->
-                RifflePacketValidator.validate(left, right, 0.10)
+                RifflePacketValidator.validate(top, bottom, 0.10)
         )
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("A riffle shuffle requires two non-empty packets");

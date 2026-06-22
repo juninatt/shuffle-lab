@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
-import se.pbt.shufflelab.card.DeckFactory;
+import se.pbt.shufflelab.deck.DeckFactory;
 import se.pbt.shufflelab.operation.split.BalancedDeckSplitter;
 
 import java.util.HashSet;

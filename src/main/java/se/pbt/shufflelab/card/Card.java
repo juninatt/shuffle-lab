@@ -4,6 +4,9 @@ import java.util.Objects;
 
 /**
  * Represents a single immutable playing card.
+ *
+ * <p>A card consists of a suit and a rank and cannot be modified after
+ * creation.</p>
  */
 public record Card(Suit suit, Rank rank) {
 
