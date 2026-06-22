@@ -31,7 +31,7 @@ class CutDeckOperationTest {
 
             var random = TestRandoms.fixedRandom();
 
-            operation.apply(deck, random);
+            operation.cut(deck, random);
 
             assertThat(deck).hasSize(52);
             assertThat(new HashSet<>(deck)).isEqualTo(originalCards);
@@ -49,7 +49,7 @@ class CutDeckOperationTest {
 
             var random = TestRandoms.fixedRandom();
 
-            operation.apply(deck, random);
+            operation.cut(deck, random);
 
             assertThat(deck).isNotEqualTo(original);
         }
@@ -66,7 +66,7 @@ class CutDeckOperationTest {
 
             var random = TestRandoms.fixedRandom();
 
-            operation.apply(deck, random);
+            operation.cut(deck, random);
 
             assertThat(deck.getFirst()).isEqualTo(original.get(26));
             assertThat(deck.get(25)).isEqualTo(original.get(51));
@@ -87,7 +87,7 @@ class CutDeckOperationTest {
 
             var random = TestRandoms.fixedRandom();
 
-            operation.apply(deck, random);
+            operation.cut(deck, random);
 
             assertThat(deck.subList(0, 26))
                     .containsExactlyElementsOf(original.subList(26, 52));
@@ -113,7 +113,7 @@ class CutDeckOperationTest {
 
             var random = TestRandoms.fixedRandom();
 
-            operation.apply(deck, random);
+            operation.cut(deck, random);
 
             assertThat(deck).hasSize(52);
             assertThat(new HashSet<>(deck)).isEqualTo(originalCards);
@@ -131,7 +131,7 @@ class CutDeckOperationTest {
 
             var random = TestRandoms.fixedRandom();
 
-            operation.apply(deck, random);
+            operation.cut(deck, random);
 
             assertThat(deck).isNotEqualTo(original);
         }
@@ -147,7 +147,7 @@ class CutDeckOperationTest {
 
             var random = TestRandoms.fixedRandom();
 
-            operation.apply(deck, random);
+            operation.cut(deck, random);
 
             assertThat(deck).hasSize(52);
             assertThat(new HashSet<>(deck)).hasSize(52);

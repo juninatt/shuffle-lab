@@ -1,7 +1,6 @@
 package se.pbt.shufflelab.operation;
 
 import se.pbt.shufflelab.card.Card;
-import se.pbt.shufflelab.shuffle.Shuffle;
 import se.pbt.shufflelab.operation.split.DeckSplitter;
 
 import java.util.ArrayList;
@@ -9,35 +8,54 @@ import java.util.List;
 import java.util.random.RandomGenerator;
 
 /**
- * Simulates cutting a deck by moving the top packet below the bottom packet.
+ * Cuts a deck by moving the top packet below the bottom packet.
  */
-public class CutDeckOperation implements Shuffle {
+public class CutDeckOperation {
 
     private final DeckSplitter deckSplitter;
 
+    /**
+     * Creates a cut operation.
+     *
+     * @param deckSplitter determines where the deck is cut
+     */
     public CutDeckOperation(DeckSplitter deckSplitter) {
         this.deckSplitter = deckSplitter;
     }
 
     /**
-     * Cuts the deck by moving the top packet below the bottom packet.
+     * Cuts the given deck in place.
      *
      * @param deck the deck to cut
      * @param random a source of controlled randomness
      */
-    @Override
-    public void apply(List<Card> deck, RandomGenerator random) {
+    public void cut(List<Card> deck, RandomGenerator random) {
         List<List<Card>> packets = deckSplitter.split(deck, random);
 
+        List<Card> cutDeck = moveTopPacketBelowBottomPacket(packets);
+
+        replaceDeckOrder(deck, cutDeck);
+    }
+
+    private List<Card> moveTopPacketBelowBottomPacket(List<List<Card>> packets) {
         List<Card> topPacket = packets.get(0);
         List<Card> bottomPacket = packets.get(1);
 
-        List<Card> cutDeck = new ArrayList<>(deck.size());
+        List<Card> cutDeck = new ArrayList<>(
+                topPacket.size() + bottomPacket.size()
+        );
 
         cutDeck.addAll(bottomPacket);
         cutDeck.addAll(topPacket);
 
+        return cutDeck;
+    }
+
+    private void replaceDeckOrder(
+            List<Card> deck,
+            List<Card> newOrder) {
+
         deck.clear();
-        deck.addAll(cutDeck);
+        deck.addAll(newOrder);
     }
 }
