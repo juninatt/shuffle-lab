@@ -1,4 +1,4 @@
-package se.pbt.shufflelab.operation;
+package se.pbt.shufflelab.operation.cut;
 
 import se.pbt.shufflelab.card.Card;
 import se.pbt.shufflelab.operation.split.DeckSplitter;
@@ -10,7 +10,7 @@ import java.util.random.RandomGenerator;
 /**
  * Cuts a deck by moving the top packet below the bottom packet.
  */
-public class CutDeckOperation {
+public class DeckCutter {
 
     private final DeckSplitter deckSplitter;
 
@@ -19,7 +19,7 @@ public class CutDeckOperation {
      *
      * @param deckSplitter determines where the deck is cut
      */
-    public CutDeckOperation(DeckSplitter deckSplitter) {
+    public DeckCutter(DeckSplitter deckSplitter) {
         this.deckSplitter = deckSplitter;
     }
 

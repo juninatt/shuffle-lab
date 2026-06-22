@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
 import se.pbt.shufflelab.deck.DeckFactory;
+import se.pbt.shufflelab.operation.cut.DeckCutter;
 import se.pbt.shufflelab.operation.split.BalancedDeckSplitter;
 
 import java.util.HashSet;
@@ -13,7 +14,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Cut deck operation")
-class CutDeckOperationTest {
+class DeckCutterTest {
 
     @Nested
     @DisplayName("Perfect cut behavior")
@@ -25,7 +26,7 @@ class CutDeckOperationTest {
             var deck = DeckFactory.standardDeck();
             var originalCards = new HashSet<>(deck);
 
-            var operation = new CutDeckOperation(
+            var operation = new DeckCutter(
                     new BalancedDeckSplitter(0)
             );
 
@@ -43,7 +44,7 @@ class CutDeckOperationTest {
             var deck = DeckFactory.standardDeck();
             var original = List.copyOf(deck);
 
-            var operation = new CutDeckOperation(
+            var operation = new DeckCutter(
                     new BalancedDeckSplitter(0)
             );
 
@@ -60,7 +61,7 @@ class CutDeckOperationTest {
             var deck = DeckFactory.standardDeck();
             var original = List.copyOf(deck);
 
-            var operation = new CutDeckOperation(
+            var operation = new DeckCutter(
                     new BalancedDeckSplitter(0)
             );
 
@@ -81,7 +82,7 @@ class CutDeckOperationTest {
             var deck = DeckFactory.standardDeck();
             var original = List.copyOf(deck);
 
-            var operation = new CutDeckOperation(
+            var operation = new DeckCutter(
                     new BalancedDeckSplitter(0)
             );
 
@@ -107,7 +108,7 @@ class CutDeckOperationTest {
             var deck = DeckFactory.standardDeck();
             var originalCards = new HashSet<>(deck);
 
-            var operation = new CutDeckOperation(
+            var operation = new DeckCutter(
                     new BalancedDeckSplitter(4)
             );
 
@@ -125,7 +126,7 @@ class CutDeckOperationTest {
             var deck = DeckFactory.standardDeck();
             var original = List.copyOf(deck);
 
-            var operation = new CutDeckOperation(
+            var operation = new DeckCutter(
                     new BalancedDeckSplitter(4)
             );
 
@@ -141,7 +142,7 @@ class CutDeckOperationTest {
         void shouldSupportUnevenPackets() {
             var deck = DeckFactory.standardDeck();
 
-            var operation = new CutDeckOperation(
+            var operation = new DeckCutter(
                     new BalancedDeckSplitter(4)
             );
 
