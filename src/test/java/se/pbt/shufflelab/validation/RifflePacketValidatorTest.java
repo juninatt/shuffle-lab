@@ -2,7 +2,7 @@ package se.pbt.shufflelab.validation;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import se.pbt.shufflelab.card.Card;
+import se.pbt.shufflelab.deck.card.Card;
 import se.pbt.shufflelab.deck.DeckFactory;
 
 import java.util.List;

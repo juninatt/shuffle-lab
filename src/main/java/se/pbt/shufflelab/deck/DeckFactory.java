@@ -1,8 +1,8 @@
 package se.pbt.shufflelab.deck;
 
-import se.pbt.shufflelab.card.Card;
-import se.pbt.shufflelab.card.Rank;
-import se.pbt.shufflelab.card.Suit;
+import se.pbt.shufflelab.deck.card.Card;
+import se.pbt.shufflelab.deck.card.Rank;
+import se.pbt.shufflelab.deck.card.Suit;
 
 import java.util.ArrayList;
 import java.util.List;

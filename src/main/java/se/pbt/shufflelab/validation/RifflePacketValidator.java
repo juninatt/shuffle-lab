@@ -1,6 +1,6 @@
 package se.pbt.shufflelab.validation;
 
-import se.pbt.shufflelab.card.Card;
+import se.pbt.shufflelab.deck.card.Card;
 
 import java.util.List;
 
