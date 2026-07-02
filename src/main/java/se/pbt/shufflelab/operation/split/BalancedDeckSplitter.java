@@ -31,7 +31,7 @@ public class BalancedDeckSplitter implements DeckSplitter {
     }
 
     /**
-     * Splits a deck into two packets near the middle to simulate a natural cut.
+     * Splits a deck into two packets near the middle.
      *
      * @param deck the deck to split
      * @param random a source of controlled randomness

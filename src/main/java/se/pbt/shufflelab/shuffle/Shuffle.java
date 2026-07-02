@@ -1,29 +1,27 @@
 package se.pbt.shufflelab.shuffle;
 
 import se.pbt.shufflelab.card.Card;
-import se.pbt.shufflelab.routine.ShuffleRoutine;
+import se.pbt.shufflelab.operation.Operation;
+import se.pbt.shufflelab.routine.Routine;
 
 import java.util.List;
 import java.util.random.RandomGenerator;
 
 /**
- * Represents a single operation commonly performed while shuffling cards.
+ * Represents a card-shuffling technique.
  *
- * <p>Examples include cutting the deck, performing a riffle merge,
- * transferring packets during an overhand shuffle, or swapping cards.
- * Multiple operations can be combined to form a complete
- * {@link ShuffleRoutine}.</p>
+ * <p>Shuffles combine one or more {@link Operation operations} to mix
+ * the order of a deck. Multiple shuffles can in turn be combined into
+ * complete {@link Routine routines}.</p>
  */
+@FunctionalInterface
 public interface Shuffle {
 
     /**
-     * Applies this operation to the given deck.
+     * Shuffles the given deck.
      *
-     * <p>The operation modifies the deck in place and may use controlled
-     * randomness to simulate natural variation in the shuffling process.</p>
-     *
-     * @param deck the deck to modify
+     * @param deck the deck to shuffle
      * @param random a source of controlled randomness
      */
-    void apply(List<Card> deck, RandomGenerator random);
+    void shuffle(List<Card> deck, RandomGenerator random);
 }

@@ -14,22 +14,17 @@ import java.util.random.RandomGenerator;
  * It can be used to model real-world shuffling techniques,
  * such as repeatedly cutting and riffle shuffling a deck.</p>
  */
-public class CompositeShuffleRoutine implements ShuffleRoutine {
+public class CompositeRoutine implements Routine {
 
-    private final String name;
     private final List<Shuffle> operations;
 
     /**
      * Creates a new shuffle strategy consisting of the given operations.
      *
-     * @param name a human-readable name describing the strategy
      * @param operations the operations that make up the strategy
      */
-    public CompositeShuffleRoutine(
-            String name,
-            List<Shuffle> operations) {
+    public CompositeRoutine(List<Shuffle> operations) {
 
-        this.name = name;
         this.operations = List.copyOf(operations);
     }
 
@@ -40,14 +35,9 @@ public class CompositeShuffleRoutine implements ShuffleRoutine {
      * @param random a source of controlled randomness
      */
     @Override
-    public void shuffle(List<Card> deck, RandomGenerator random) {
+    public void execute(List<Card> deck, RandomGenerator random) {
         for (Shuffle operation : operations) {
-            operation.apply(deck, random);
+            operation.shuffle(deck, random);
         }
-    }
-
-    @Override
-    public String name() {
-        return name;
     }
 }

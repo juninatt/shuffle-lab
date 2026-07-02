@@ -35,7 +35,7 @@ class RiffleShuffleTest {
 
             var random = TestRandoms.fixedRandom();
 
-            operation.apply(deck, random);
+            operation.shuffle(deck, random);
 
             assertThat(deck).hasSize(52);
             assertThat(new HashSet<>(deck)).isEqualTo(originalCards);
@@ -54,7 +54,7 @@ class RiffleShuffleTest {
 
             var random = TestRandoms.fixedRandom();
 
-            operation.apply(deck, random);
+            operation.shuffle(deck, random);
 
             assertThat(deck).isNotEqualTo(original);
         }
@@ -72,7 +72,7 @@ class RiffleShuffleTest {
 
             var random = TestRandoms.fixedRandom();
 
-            operation.apply(deck, random);
+            operation.shuffle(deck, random);
 
             assertThat(deck.get(0)).withFailMessage("Top card should be unchanged").isEqualTo(original.get(0));
             assertThat(deck.get(1)).withFailMessage("Second card should be first card of top packet").isEqualTo(original.get(26));
@@ -98,7 +98,7 @@ class RiffleShuffleTest {
 
             var random = TestRandoms.fixedRandom();
 
-            operation.apply(deck, random);
+            operation.shuffle(deck, random);
 
             assertThat(deck).hasSize(52);
             assertThat(new HashSet<>(deck)).isEqualTo(originalCards);
@@ -117,7 +117,7 @@ class RiffleShuffleTest {
 
             var random = TestRandoms.fixedRandom();
 
-            operation.apply(deck, random);
+            operation.shuffle(deck, random);
 
             assertThat(deck).isNotEqualTo(original);
         }
@@ -140,9 +140,9 @@ class RiffleShuffleTest {
                     new PerfectInterleaver(InterleaveStart.BOTTOM)
             );
 
-            humanOperation.apply(humanDeck, random);
+            humanOperation.shuffle(humanDeck, random);
 
-            perfectOperation.apply(
+            perfectOperation.shuffle(
                     perfectDeck,
                     TestRandoms.fixedRandom()
             );
