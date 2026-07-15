@@ -43,12 +43,12 @@ public final class RoutineFactory {
     public static Routine simpleRiffleShuffle(SkillLevel skillLevel) {
         Objects.requireNonNull(skillLevel, "skillLevel must not be null");
 
-        SkillProfile profile = SkillProfile.forLevel(skillLevel);
+        SkillProfile profile = SkillProfile.withLevel(skillLevel);
 
         Shuffle riffleShuffle = ShuffleFactory.riffle(skillLevel);
 
         DeckCutter deckCutter = new DeckCutter(
-                new BalancedDeckSplitter(profile.splitTolerance())
+                new BalancedDeckSplitter(profile.maxSplitDeviation())
         );
 
         Shuffle cut = deckCutter::cut;

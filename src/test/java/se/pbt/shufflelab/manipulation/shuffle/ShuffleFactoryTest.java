@@ -30,6 +30,14 @@ class ShuffleFactoryTest {
                     .as("Factory should return a configured shuffle")
                     .isNotNull();
         }
+
+        @Test
+        @DisplayName("Should create an overhand shuffle")
+        void shouldCreateOverhandShuffle() {
+            Shuffle shuffle = ShuffleFactory.overhand(SkillLevel.EXPERT);
+
+            assertThat(shuffle).isNotNull();
+        }
     }
 
 
@@ -90,11 +98,19 @@ class ShuffleFactoryTest {
     class Validation {
 
         @Test
-        @DisplayName("Should reject null skill level")
-        void shouldRejectNullSkillLevel() {
+        @DisplayName("Should reject null skill level when creating a riffle shuffle")
+        void shouldRejectNullSkillLevelForRiffleShuffle() {
             assertThatThrownBy(() -> ShuffleFactory.riffle(null))
                     .isInstanceOf(NullPointerException.class)
                     .hasMessage("skillLevel must not be null");
         }
+    }
+
+    @Test
+    @DisplayName("Should reject null skill level when creating an overhand shuffle")
+    void shouldRejectNullSkillLevelForOverhandShuffle() {
+        assertThatThrownBy(() -> ShuffleFactory.overhand(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("skillLevel must not be null");
     }
 }

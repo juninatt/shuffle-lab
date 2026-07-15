@@ -99,7 +99,7 @@ class RoutineFactoryTest {
             var expectedDeck = DeckFactory.standardDeck();
 
             SkillLevel skillLevel = SkillLevel.INTERMEDIATE;
-            SkillProfile profile = SkillProfile.forLevel(skillLevel);
+            SkillProfile profile = SkillProfile.withLevel(skillLevel);
 
             Routine routine = RoutineFactory.simpleRiffleShuffle(skillLevel);
 
@@ -111,7 +111,7 @@ class RoutineFactoryTest {
             ShuffleFactory.riffle(skillLevel)
                     .shuffle(expectedDeck, expectedRandom);
 
-            new DeckCutter(new BalancedDeckSplitter(profile.splitTolerance()))
+            new DeckCutter(new BalancedDeckSplitter(profile.maxSplitDeviation()))
                     .cut(expectedDeck, expectedRandom);
 
             assertThat(routineDeck)

@@ -5,11 +5,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
 import se.pbt.shufflelab.deck.DeckFactory;
-import se.pbt.shufflelab.manipulation.operation.interleave.InterleaveStart;
 import se.pbt.shufflelab.manipulation.operation.interleave.HumanInterleaver;
+import se.pbt.shufflelab.manipulation.operation.interleave.InterleaveStart;
 import se.pbt.shufflelab.manipulation.operation.interleave.PerfectInterleaver;
 import se.pbt.shufflelab.manipulation.operation.split.BalancedDeckSplitter;
-import se.pbt.shufflelab.manipulation.shuffle.RiffleShuffle;
 
 import java.util.HashSet;
 import java.util.List;

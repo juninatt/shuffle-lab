@@ -20,28 +20,33 @@ public class HumanInterleaver implements Interleaver {
      * The maximum number of cards that may be released from a packet
      * in a single step of the shuffle.
      */
-    private final int maxDropSize;
+    private final int maxInterleavePacketSize;
 
     private final InterleaveStart interleaveStart;
 
     /**
-     * Creates a human-style riffle interleaver.
+     * Creates a human interleaver with the supplied starting packet and
+     * maximum packet size.
      *
-     * @param interleaveStart the packet that releases cards first
-     * @param maxDropSize the maximum number of cards that may be released
-     *                    from a packet at once during the shuffle
+     * @param start the packet from which interleaving begins
+     * @param maxInterleavePacketSize the maximum number of cards that may be
+     *                                taken from one packet during a single
+     *                                interleaving step
+     * @throws NullPointerException if {@code start} is {@code null}
+     * @throws IllegalArgumentException if {@code maxInterleavePacketSize}
+     *                                  is less than one
      */
     public HumanInterleaver(
-            InterleaveStart interleaveStart,
-            int maxDropSize) {
+            InterleaveStart start,
+            int maxInterleavePacketSize) {
 
-        if (maxDropSize < 1) {
+        if (maxInterleavePacketSize < 1) {
             throw new IllegalArgumentException(
-                    "maxDropSize must be at least 1");
+                    "maxInterleavePacketSize must be at least 1");
         }
 
-        this.interleaveStart = interleaveStart;
-        this.maxDropSize = maxDropSize;
+        this.interleaveStart = start;
+        this.maxInterleavePacketSize = maxInterleavePacketSize;
     }
 
     /**
@@ -107,17 +112,17 @@ public class HumanInterleaver implements Interleaver {
             List<Card> target,
             RandomGenerator random) {
 
-        int remaining = source.size() - startIndex;
+        int numberOfRemainingCards = source.size() - startIndex;
 
-        int amount = random.nextInt(
+        int packetSize = random.nextInt(
                 1,
-                Math.min(maxDropSize, remaining) + 1
+                Math.min(maxInterleavePacketSize, numberOfRemainingCards) + 1
         );
 
-        for (int i = 0; i < amount; i++) {
+        for (int i = 0; i < packetSize; i++) {
             target.add(source.get(startIndex + i));
         }
 
-        return startIndex + amount;
+        return startIndex + packetSize;
     }
 }

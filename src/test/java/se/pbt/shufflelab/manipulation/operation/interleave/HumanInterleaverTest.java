@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
 import se.pbt.shufflelab.deck.DeckFactory;
-import se.pbt.shufflelab.manipulation.operation.interleave.HumanInterleaver;
-import se.pbt.shufflelab.manipulation.operation.interleave.InterleaveStart;
-import se.pbt.shufflelab.manipulation.operation.interleave.PerfectInterleaver;
 
 import java.util.HashSet;
 
@@ -39,7 +36,7 @@ class HumanInterleaverTest {
     void shouldRejectInvalidMaxDropSize() {
         assertThatThrownBy(() -> new HumanInterleaver(InterleaveStart.BOTTOM, 0))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("maxDropSize must be at least 1");
+                .hasMessage("maxInterleavePacketSize must be at least 1");
     }
 
     @Test

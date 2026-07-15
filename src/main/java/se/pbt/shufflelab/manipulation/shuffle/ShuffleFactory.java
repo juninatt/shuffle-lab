@@ -38,14 +38,36 @@ public final class ShuffleFactory {
     public static Shuffle riffle(SkillLevel skillLevel) {
         Objects.requireNonNull(skillLevel, "skillLevel must not be null");
 
-        SkillProfile profile = SkillProfile.forLevel(skillLevel);
+        SkillProfile profile = SkillProfile.withLevel(skillLevel);
 
         return new RiffleShuffle(
-                new BalancedDeckSplitter(profile.splitTolerance()),
+                new BalancedDeckSplitter(profile.maxSplitDeviation()),
                 new HumanInterleaver(
                         InterleaveStart.BOTTOM,
-                        profile.maxDropSize()
+                        profile.maxInterleavePacketSize()
                 )
+        );
+    }
+
+    /**
+     * Creates an overhand shuffle for a simulated performer with the supplied
+     * skill level.
+     *
+     * <p>The supplied {@link SkillLevel} is converted to a
+     * {@link SkillProfile}, whose overhand-specific packet-size limit determines
+     * the maximum number of cards that may be transferred in one step.</p>
+     *
+     * @param skillLevel the simulated performer's skill level
+     * @return an overhand shuffle configured for the supplied skill level
+     * @throws NullPointerException if {@code skillLevel} is {@code null}
+     */
+    public static Shuffle overhand(SkillLevel skillLevel) {
+        Objects.requireNonNull(skillLevel, "skillLevel must not be null");
+
+        SkillProfile profile = SkillProfile.withLevel(skillLevel);
+
+        return new OverhandShuffle(
+                profile.maxOverhandPacketSize()
         );
     }
 }

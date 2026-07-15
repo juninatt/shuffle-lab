@@ -14,20 +14,20 @@ import java.util.random.RandomGenerator;
  */
 public class BalancedDeckSplitter implements DeckSplitter {
 
-    private final int tolerance;
+    private final int maxSplitDeviation;
 
     /**
      * Creates a splitter that divides a deck into two packets near the middle.
      *
-     * @param tolerance the maximum allowed deviation from the exact middle
+     * @param maxSplitDeviation the maximum allowed deviation from the exact middle
      *                  when selecting the split point
      */
-    public BalancedDeckSplitter(int tolerance) {
-        if (tolerance < 0) {
+    public BalancedDeckSplitter(int maxSplitDeviation) {
+        if (maxSplitDeviation < 0) {
             throw new IllegalArgumentException("tolerance must not be negative");
         }
 
-        this.tolerance = tolerance;
+        this.maxSplitDeviation = maxSplitDeviation;
     }
 
     /**
@@ -40,8 +40,8 @@ public class BalancedDeckSplitter implements DeckSplitter {
     @Override
     public List<List<Card>> split(List<Card> deck, RandomGenerator random) {
         int middle = deck.size() / 2;
-        int min = Math.max(1, middle - tolerance);
-        int max = Math.min(deck.size() - 1, middle + tolerance);
+        int min = Math.max(1, middle - maxSplitDeviation);
+        int max = Math.min(deck.size() - 1, middle + maxSplitDeviation);
         int splitIndex = random.nextInt(min, max + 1);
 
         List<Card> topPacket = new ArrayList<>(deck.subList(0, splitIndex));
