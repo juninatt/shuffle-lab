@@ -1,9 +1,9 @@
 # ShuffleLab
 
 ShuffleLab is a Java library for exploring, simulating, and comparing card shuffling techniques.
-The project began out of curiosity. 
-After many card games, I wanted a way to compare different shuffling techniques and determine which ones produce the best randomisation in practice. 
-ShuffleLab provides a framework for modelling techniques, player skill, and complete shuffle routines to answer those questions through simulation.
+
+The project began as an attempt to investigate how different shuffling techniques randomise a deck in practice. 
+It provides a framework for modelling individual techniques, player skill, and complete shuffle routines through simulation.
 
 ## Architecture
 
@@ -18,16 +18,16 @@ Routine
 ```
 
 - **Operations** are the fundamental building blocks used to manipulate the order of a deck. Examples include cutting a deck or interleaving packets.
-- **Shuffles** combine one or more operations to implement a specific shuffling technique, such as a riffle shuffle.
+- **Shuffles** combine one or more operations to implement a specific shuffling technique, such as riffle, overhand, or pile shuffles.
 - **Routines** combine one or more shuffles, optionally interleaved with individual operations, to model complete real-world shuffling procedures.
 
 ### Skill simulation
 
 ShuffleLab separates shuffle routines from execution quality.
 
-A routine defines *what* is performed, while a `SkillProfile` defines *how precisely* the underlying operations are executed. 
-This makes it possible to compare the effectiveness of identical shuffle routines performed by players of different skill levels, 
-as well as experiment with custom skill profiles.
+A routine defines *what* is performed, while a `SkillProfile` defines *how precisely* the underlying operations are executed.
+This allows the same shuffle routine to be simulated at different skill levels without changing its structure. 
+Custom skill profiles can also be created for experimentation.
 
 ### Features
 
@@ -39,6 +39,9 @@ as well as experiment with custom skill profiles.
 - Perfect and human-style packet interleaving
 - Perfect and human-style riffle shuffles
 - Overhand shuffles
+- Pile shuffles
+- Mongean shuffles
+- Skill-based shuffle configuration
 - Configurable shuffle architecture based on operations, shuffles, and routines
 - Validation of shuffle constraints
 - Comprehensive unit tests using JUnit 5 and AssertJ
