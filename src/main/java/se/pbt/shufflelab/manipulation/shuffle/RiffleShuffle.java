@@ -1,8 +1,9 @@
 package se.pbt.shufflelab.manipulation.shuffle;
 
+import se.pbt.shufflelab.deck.Deck;
 import se.pbt.shufflelab.deck.card.Card;
-import se.pbt.shufflelab.manipulation.operation.split.DeckSplitter;
 import se.pbt.shufflelab.manipulation.operation.interleave.Interleaver;
+import se.pbt.shufflelab.manipulation.operation.split.DeckSplitter;
 
 import java.util.List;
 import java.util.random.RandomGenerator;
@@ -42,7 +43,7 @@ public class RiffleShuffle implements Shuffle {
      * @param random a source of controlled randomness
      */
     @Override
-    public void shuffle(List<Card> deck, RandomGenerator random) {
+    public void shuffle(Deck deck, RandomGenerator random) {
         List<List<Card>> packets = deckSplitter.split(deck, random);
 
         List<Card> shuffledDeck = interleaver.interleave(

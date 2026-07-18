@@ -4,9 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
+import se.pbt.shufflelab.deck.Deck;
 import se.pbt.shufflelab.deck.DeckFactory;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -101,7 +101,7 @@ class FaroShuffleTest {
         @DisplayName("An out Faro shuffle should perfectly interleave both packets")
         void shouldProduceExpectedOrder() {
             var fullDeck = DeckFactory.standardDeck();
-            var deck = new ArrayList<>(fullDeck.subList(0, 8));
+            var deck = new Deck(fullDeck.subList(0, 8));
             var original = List.copyOf(deck);
 
             new FaroShuffle(FaroType.OUT)
@@ -152,7 +152,7 @@ class FaroShuffleTest {
         @DisplayName("An in Faro shuffle should perfectly interleave both packets")
         void shouldProduceExpectedOrder() {
             var fullDeck = DeckFactory.standardDeck();
-            var deck = new ArrayList<>(fullDeck.subList(0, 8));
+            var deck = new Deck(fullDeck.subList(0, 8));
             var original = List.copyOf(deck);
 
             new FaroShuffle(FaroType.IN)

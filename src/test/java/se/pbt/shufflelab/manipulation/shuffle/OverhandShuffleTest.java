@@ -4,8 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
+import se.pbt.shufflelab.deck.Deck;
 import se.pbt.shufflelab.deck.DeckFactory;
-import se.pbt.shufflelab.deck.card.Card;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -100,7 +100,7 @@ class OverhandShuffleTest {
         @DisplayName("An overhand shuffle should preserve the order within transferred packets")
         void shouldPreserveOrderWithinTransferredPackets() {
             var fullDeck = DeckFactory.standardDeck();
-            var deck = new ArrayList<>(fullDeck.subList(0, 6));
+            var deck = new Deck(fullDeck.subList(0, 6));
             var originalOrder = List.copyOf(deck);
 
             var shuffle = new OverhandShuffle(3);
@@ -126,7 +126,7 @@ class OverhandShuffleTest {
         @Test
         @DisplayName("An overhand shuffle should leave an empty deck unchanged")
         void shouldLeaveEmptyDeckUnchanged() {
-            List<Card> deck = new ArrayList<>();
+            Deck deck = new Deck(List.of());
 
             var shuffle = new OverhandShuffle(4);
 

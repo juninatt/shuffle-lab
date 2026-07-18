@@ -1,6 +1,6 @@
 package se.pbt.shufflelab.manipulation.routine;
 
-import se.pbt.shufflelab.deck.card.Card;
+import se.pbt.shufflelab.deck.Deck;
 import se.pbt.shufflelab.manipulation.shuffle.Shuffle;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class SequentialRoutine implements Routine {
      * @param random a source of controlled randomness
      */
     @Override
-    public void execute(List<Card> deck, RandomGenerator random) {
+    public void execute(Deck deck, RandomGenerator random) {
         for (Shuffle operation : operations) {
             operation.shuffle(deck, random);
         }

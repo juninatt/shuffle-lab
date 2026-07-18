@@ -1,10 +1,9 @@
 package se.pbt.shufflelab.manipulation.shuffle;
 
-import se.pbt.shufflelab.deck.card.Card;
+import se.pbt.shufflelab.deck.Deck;
 import se.pbt.shufflelab.manipulation.operation.Operation;
 import se.pbt.shufflelab.manipulation.routine.Routine;
 
-import java.util.List;
 import java.util.random.RandomGenerator;
 
 /**
@@ -23,5 +22,5 @@ public interface Shuffle {
      * @param deck the deck to shuffle
      * @param random a source of controlled randomness
      */
-    void shuffle(List<Card> deck, RandomGenerator random);
+    void shuffle(Deck deck, RandomGenerator random);
 }

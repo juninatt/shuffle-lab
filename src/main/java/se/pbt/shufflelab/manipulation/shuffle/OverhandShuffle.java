@@ -1,5 +1,6 @@
 package se.pbt.shufflelab.manipulation.shuffle;
 
+import se.pbt.shufflelab.deck.Deck;
 import se.pbt.shufflelab.deck.card.Card;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public final class OverhandShuffle implements Shuffle {
      *                              {@code null}
      */
     @Override
-    public void shuffle(List<Card> deck, RandomGenerator random) {
+    public void shuffle(Deck deck, RandomGenerator random) {
         Objects.requireNonNull(deck, "deck must not be null");
         Objects.requireNonNull(random, "random must not be null");
 

@@ -4,10 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
+import se.pbt.shufflelab.deck.Deck;
 import se.pbt.shufflelab.deck.DeckFactory;
-import se.pbt.shufflelab.deck.card.Card;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -78,7 +77,7 @@ class MongeanShuffleTest {
         @Test
         @DisplayName("A Mongean shuffle should leave an empty deck unchanged")
         void shouldLeaveEmptyDeckUnchanged() {
-            List<Card> deck = new ArrayList<>();
+            Deck deck = new Deck(List.of());
 
             var shuffle = new MongeanShuffle();
 
@@ -93,7 +92,7 @@ class MongeanShuffleTest {
         @Test
         @DisplayName("A Mongean shuffle should leave a single-card deck unchanged")
         void shouldLeaveSingleCardDeckUnchanged() {
-            var deck = new ArrayList<>(
+            var deck = new Deck(
                     DeckFactory.standardDeck().subList(0, 1)
             );
 
@@ -118,7 +117,7 @@ class MongeanShuffleTest {
         @DisplayName("A top-start Mongean shuffle should place the second card on top")
         void shouldPlaceSecondCardOnTop() {
             var fullDeck = DeckFactory.standardDeck();
-            var deck = new ArrayList<>(fullDeck.subList(0, 2));
+            Deck deck = new Deck(fullDeck.subList(0, 2));
             var originalOrder = List.copyOf(deck);
 
             var shuffle = new MongeanShuffle(MongeanStart.TOP);
@@ -138,7 +137,7 @@ class MongeanShuffleTest {
         @DisplayName("A top-start Mongean shuffle should produce the expected order")
         void shouldProduceExpectedTopStartOrder() {
             var fullDeck = DeckFactory.standardDeck();
-            var deck = new ArrayList<>(fullDeck.subList(0, 6));
+            Deck deck = new Deck(fullDeck.subList(0, 6));
             var originalOrder = List.copyOf(deck);
 
             var shuffle = new MongeanShuffle(MongeanStart.TOP);
@@ -189,7 +188,7 @@ class MongeanShuffleTest {
         @DisplayName("A bottom-start Mongean shuffle should place the second card on the bottom")
         void shouldPlaceSecondCardOnBottom() {
             var fullDeck = DeckFactory.standardDeck();
-            var deck = new ArrayList<>(fullDeck.subList(0, 2));
+            Deck deck = new Deck(fullDeck.subList(0, 2));
             var originalOrder = List.copyOf(deck);
 
             var shuffle = new MongeanShuffle(MongeanStart.BOTTOM);
@@ -209,7 +208,7 @@ class MongeanShuffleTest {
         @DisplayName("A bottom-start Mongean shuffle should produce the expected order")
         void shouldProduceExpectedBottomStartOrder() {
             var fullDeck = DeckFactory.standardDeck();
-            var deck = new ArrayList<>(fullDeck.subList(0, 6));
+            Deck deck = new Deck(fullDeck.subList(0, 6));
             var originalOrder = List.copyOf(deck);
 
             var shuffle = new MongeanShuffle(MongeanStart.BOTTOM);

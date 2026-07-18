@@ -1,11 +1,10 @@
 package se.pbt.shufflelab.manipulation.shuffle;
 
-import se.pbt.shufflelab.deck.card.Card;
+import se.pbt.shufflelab.deck.Deck;
 import se.pbt.shufflelab.manipulation.operation.interleave.InterleaveStart;
 import se.pbt.shufflelab.manipulation.operation.interleave.PerfectInterleaver;
 import se.pbt.shufflelab.manipulation.operation.split.BalancedDeckSplitter;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.random.RandomGenerator;
 
@@ -53,7 +52,7 @@ public final class FaroShuffle implements Shuffle {
      *                              {@code null}
      */
     @Override
-    public void shuffle(List<Card> deck, RandomGenerator random) {
+    public void shuffle(Deck deck, RandomGenerator random) {
         Objects.requireNonNull(deck, "deck must not be null");
         Objects.requireNonNull(random, "random must not be null");
 

@@ -1,5 +1,6 @@
 package se.pbt.shufflelab.manipulation.operation.split;
 
+import se.pbt.shufflelab.deck.Deck;
 import se.pbt.shufflelab.deck.card.Card;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class BalancedDeckSplitter implements DeckSplitter {
      * @return the resulting packets
      */
     @Override
-    public List<List<Card>> split(List<Card> deck, RandomGenerator random) {
+    public List<List<Card>> split(Deck deck, RandomGenerator random) {
         int middle = deck.size() / 2;
         int min = Math.max(1, middle - maxSplitDeviation);
         int max = Math.min(deck.size() - 1, middle + maxSplitDeviation);

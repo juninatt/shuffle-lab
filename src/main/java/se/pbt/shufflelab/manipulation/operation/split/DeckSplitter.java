@@ -1,5 +1,6 @@
 package se.pbt.shufflelab.manipulation.operation.split;
 
+import se.pbt.shufflelab.deck.Deck;
 import se.pbt.shufflelab.deck.card.Card;
 
 import java.util.List;
@@ -22,5 +23,5 @@ public interface DeckSplitter {
      * @param random a source of controlled randomness
      * @return the resulting packets in their original order
      */
-    List<List<Card>> split(List<Card> deck, RandomGenerator random);
+    List<List<Card>> split(Deck deck, RandomGenerator random);
 }

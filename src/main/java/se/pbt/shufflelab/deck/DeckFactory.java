@@ -6,6 +6,7 @@ import se.pbt.shufflelab.deck.card.Suit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Factory for creating standard playing-card decks.
@@ -31,9 +32,9 @@ public final class DeckFactory {
     /**
      * Creates a new standard 52-card deck in new-deck order.
      *
-     * @return a mutable deck containing 52 unique {@link Card}s
+     * @return a mutable standard deck
      */
-    public static List<Card> standardDeck() {
+    public static Deck standardDeck() {
         return create(DeckOrder.NEW_DECK);
     }
 
@@ -41,20 +42,40 @@ public final class DeckFactory {
      * Creates a new standard 52-card deck in the given starting order.
      *
      * @param deckOrder the starting order to use
-     * @return a mutable deck containing 52 unique {@link Card}s
+     * @return a mutable standard deck
+     * @throws NullPointerException if deckOrder is null
      */
-    public static List<Card> create(DeckOrder deckOrder) {
+    public static Deck create(DeckOrder deckOrder) {
+        Objects.requireNonNull(deckOrder, "deckOrder must not be null");
+
         return switch (deckOrder) {
             case NEW_DECK -> createDeck(
-                    List.of(Suit.CLUBS, Suit.DIAMONDS, Suit.HEARTS, Suit.SPADES),
+                    List.of(
+                            Suit.CLUBS,
+                            Suit.DIAMONDS,
+                            Suit.HEARTS,
+                            Suit.SPADES
+                    ),
                     ASCENDING_RANKS
             );
+
             case CASINO_INSPECTION -> createDeck(
-                    List.of(Suit.SPADES, Suit.HEARTS, Suit.DIAMONDS, Suit.CLUBS),
+                    List.of(
+                            Suit.SPADES,
+                            Suit.HEARTS,
+                            Suit.DIAMONDS,
+                            Suit.CLUBS
+                    ),
                     ASCENDING_RANKS
             );
+
             case BRIDGE -> createDeck(
-                    List.of(Suit.SPADES, Suit.HEARTS, Suit.DIAMONDS, Suit.CLUBS),
+                    List.of(
+                            Suit.SPADES,
+                            Suit.HEARTS,
+                            Suit.DIAMONDS,
+                            Suit.CLUBS
+                    ),
                     DESCENDING_RANKS
             );
         };
@@ -67,18 +88,19 @@ public final class DeckFactory {
      * @param ranks the rank order to use within each suit
      * @return a mutable deck in the requested order
      */
-    private static List<Card> createDeck(
+    private static Deck createDeck(
             List<Suit> suits,
             List<Rank> ranks) {
 
-        List<Card> deck = new ArrayList<>(52);
+        List<Card> cards =
+                new ArrayList<>(suits.size() * ranks.size());
 
         for (Suit suit : suits) {
             for (Rank rank : ranks) {
-                deck.add(new Card(suit, rank));
+                cards.add(new Card(suit, rank));
             }
         }
 
-        return deck;
+        return new Deck(cards);
     }
 }

@@ -4,10 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
+import se.pbt.shufflelab.deck.Deck;
 import se.pbt.shufflelab.deck.DeckFactory;
-import se.pbt.shufflelab.deck.card.Card;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -58,7 +57,7 @@ class PileShuffleTest {
         @DisplayName("A pile shuffle should deal cards cyclically between piles")
         void shouldDealCardsCyclicallyBetweenPiles() {
             var fullDeck = DeckFactory.standardDeck();
-            var deck = new ArrayList<>(fullDeck.subList(0, 12));
+            var deck = new Deck(fullDeck.subList(0, 12));
             var originalOrder = List.copyOf(deck);
 
             var shuffle = new PileShuffle(4);
@@ -91,7 +90,7 @@ class PileShuffleTest {
         @DisplayName("A pile shuffle should preserve card order within each pile")
         void shouldPreserveCardOrderWithinEachPile() {
             var fullDeck = DeckFactory.standardDeck();
-            var deck = new ArrayList<>(fullDeck.subList(0, 12));
+            var deck = new Deck(fullDeck.subList(0, 12));
             var originalOrder = List.copyOf(deck);
 
             var shuffle = new PileShuffle(4);
@@ -140,7 +139,7 @@ class PileShuffleTest {
         @DisplayName("A pile shuffle should handle a deck smaller than the number of piles")
         void shouldHandleDeckSmallerThanPileCount() {
             var fullDeck = DeckFactory.standardDeck();
-            var deck = new ArrayList<>(fullDeck.subList(0, 3));
+            var deck = new Deck(fullDeck.subList(0, 3));
             var originalOrder = List.copyOf(deck);
 
             var shuffle = new PileShuffle(5);
@@ -160,7 +159,7 @@ class PileShuffleTest {
         @Test
         @DisplayName("A pile shuffle should leave an empty deck unchanged")
         void shouldLeaveEmptyDeckUnchanged() {
-            List<Card> deck = new ArrayList<>();
+            Deck deck = new Deck(List.of());
 
             var shuffle = new PileShuffle(4);
 

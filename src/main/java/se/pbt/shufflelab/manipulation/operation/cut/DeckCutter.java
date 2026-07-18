@@ -1,5 +1,6 @@
 package se.pbt.shufflelab.manipulation.operation.cut;
 
+import se.pbt.shufflelab.deck.Deck;
 import se.pbt.shufflelab.deck.card.Card;
 import se.pbt.shufflelab.manipulation.operation.split.DeckSplitter;
 
@@ -29,7 +30,7 @@ public class DeckCutter {
      * @param deck the deck to cut
      * @param random a source of controlled randomness
      */
-    public void cut(List<Card> deck, RandomGenerator random) {
+    public void cut(Deck deck, RandomGenerator random) {
         List<List<Card>> packets = deckSplitter.split(deck, random);
 
         List<Card> cutDeck = moveTopPacketBelowBottomPacket(packets);
@@ -52,7 +53,7 @@ public class DeckCutter {
     }
 
     private void replaceDeckOrder(
-            List<Card> deck,
+            Deck deck,
             List<Card> newOrder) {
 
         deck.clear();
