@@ -1,4 +1,4 @@
-package se.pbt.shufflelab.analysis;
+package se.pbt.shufflelab.analysis.displacement;
 
 /**
  * Represents the result of analysing how far cards have moved from their

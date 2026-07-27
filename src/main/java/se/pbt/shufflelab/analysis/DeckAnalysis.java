@@ -1,5 +1,8 @@
 package se.pbt.shufflelab.analysis;
 
+import se.pbt.shufflelab.analysis.displacement.DisplacementResult;
+import se.pbt.shufflelab.analysis.preservation.PreservedOrderResult;
+
 import java.util.Objects;
 
 /**
