@@ -1,4 +1,4 @@
-package se.pbt.shufflelab.analysis.preservation;
+package se.pbt.shufflelab.analysis.preservedorder;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

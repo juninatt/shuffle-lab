@@ -1,4 +1,4 @@
-package se.pbt.shufflelab.analysis.preservation;
+package se.pbt.shufflelab.analysis.preservedorder;
 
 /**
  * Represents the result of analysing groups of cards that remain in their original consecutive order after shuffling.

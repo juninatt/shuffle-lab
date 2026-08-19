@@ -1,7 +1,7 @@
 package se.pbt.shufflelab.analysis;
 
 import se.pbt.shufflelab.analysis.displacement.DisplacementAnalyzer;
-import se.pbt.shufflelab.analysis.preservation.PreservedOrderAnalyzer;
+import se.pbt.shufflelab.analysis.preservedorder.PreservedOrderAnalyzer;
 import se.pbt.shufflelab.deck.Deck;
 
 import java.util.Objects;

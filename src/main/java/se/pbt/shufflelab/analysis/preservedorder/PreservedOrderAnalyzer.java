@@ -1,4 +1,4 @@
-package se.pbt.shufflelab.analysis.preservation;
+package se.pbt.shufflelab.analysis.preservedorder;
 
 import se.pbt.shufflelab.analysis.CardPositionLookup;
 import se.pbt.shufflelab.deck.Deck;

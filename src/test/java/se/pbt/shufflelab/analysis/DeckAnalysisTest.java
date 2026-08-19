@@ -3,7 +3,7 @@ package se.pbt.shufflelab.analysis;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.analysis.displacement.DisplacementResult;
-import se.pbt.shufflelab.analysis.preservation.PreservedOrderResult;
+import se.pbt.shufflelab.analysis.preservedorder.PreservedOrderResult;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
