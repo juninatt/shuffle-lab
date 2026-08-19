@@ -1,12 +1,12 @@
-package se.pbt.shufflelab.deck;
+package se.pbt.shufflelab.factory;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import se.pbt.shufflelab.deck.DeckOrder;
 import se.pbt.shufflelab.deck.card.Card;
 import se.pbt.shufflelab.deck.card.Rank;
 import se.pbt.shufflelab.deck.card.Suit;
-import se.pbt.shufflelab.factory.DeckFactory;
 
 import java.util.HashSet;
 

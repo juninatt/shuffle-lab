@@ -1,11 +1,10 @@
-package se.pbt.shufflelab.manipulation.shuffle;
+package se.pbt.shufflelab.factory;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
-import se.pbt.shufflelab.factory.DeckFactory;
-import se.pbt.shufflelab.factory.ShuffleFactory;
+import se.pbt.shufflelab.manipulation.shuffle.Shuffle;
 import se.pbt.shufflelab.skill.SkillLevel;
 
 import java.util.HashSet;

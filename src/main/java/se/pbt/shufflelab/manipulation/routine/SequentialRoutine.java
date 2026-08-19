@@ -4,6 +4,7 @@ import se.pbt.shufflelab.deck.Deck;
 import se.pbt.shufflelab.manipulation.shuffle.Shuffle;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.random.RandomGenerator;
 
 /**
@@ -21,9 +22,13 @@ public class SequentialRoutine implements Routine {
     /**
      * Creates a new shuffle strategy consisting of the given operations.
      *
-     * @param operations the operations that make up the strategy
+     * @param operations the operations that make up the strategy, applied in
+     *                    order; the list is copied, so later changes to the
+     *                    supplied list do not affect this routine
+     * @throws NullPointerException if {@code operations} is {@code null}
      */
     public SequentialRoutine(List<Shuffle> operations) {
+        Objects.requireNonNull(operations, "operations must not be null");
 
         this.operations = List.copyOf(operations);
     }
