@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
 import se.pbt.shufflelab.deck.Deck;
-import se.pbt.shufflelab.deck.DeckFactory;
+import se.pbt.shufflelab.factory.DeckFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;

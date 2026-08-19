@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
-import se.pbt.shufflelab.deck.DeckFactory;
+import se.pbt.shufflelab.factory.DeckFactory;
 
 import java.util.HashSet;
 
@@ -22,7 +22,7 @@ class HumanInterleaverTest {
         var top = deck.subList(0, 26);
         var bottom = deck.subList(26, 52);
 
-        var interleaver = new HumanInterleaver(InterleaveStart.BOTTOM, 3);
+        var interleaver = new HumanInterleaver(InterleaveStart.BOTTOM, 3, 0.15);
         var random = TestRandoms.fixedRandom();
 
         var result = interleaver.interleave(top, bottom, random);
@@ -34,9 +34,25 @@ class HumanInterleaverTest {
     @Test
     @DisplayName("A human interleave should require a positive max drop size")
     void shouldRejectInvalidMaxDropSize() {
-        assertThatThrownBy(() -> new HumanInterleaver(InterleaveStart.BOTTOM, 0))
+        assertThatThrownBy(() -> new HumanInterleaver(InterleaveStart.BOTTOM, 0, 0.15))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("maxInterleavePacketSize must be at least 1");
+    }
+
+    @Test
+    @DisplayName("A human interleave should require a positive max imbalance ratio")
+    void shouldRejectZeroImbalanceRatio() {
+        assertThatThrownBy(() -> new HumanInterleaver(InterleaveStart.BOTTOM, 3, 0.0))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("maxImbalanceRatio must be greater than 0 and at most 1");
+    }
+
+    @Test
+    @DisplayName("A human interleave should reject a max imbalance ratio above one")
+    void shouldRejectImbalanceRatioAboveOne() {
+        assertThatThrownBy(() -> new HumanInterleaver(InterleaveStart.BOTTOM, 3, 1.5))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("maxImbalanceRatio must be greater than 0 and at most 1");
     }
 
     @Test
@@ -47,7 +63,7 @@ class HumanInterleaverTest {
         var top = deck.subList(0, 26);
         var bottom = deck.subList(26, 52);
 
-        var interleaver = new HumanInterleaver(InterleaveStart.BOTTOM, 3);
+        var interleaver = new HumanInterleaver(InterleaveStart.BOTTOM, 3, 0.15);
         var random = TestRandoms.fixedRandom();
 
         var result = interleaver.interleave(top, bottom, random);
@@ -70,7 +86,7 @@ class HumanInterleaverTest {
             var top = deck.subList(0, 26);
             var bottom = deck.subList(26, 52);
 
-            var result = new HumanInterleaver(InterleaveStart.TOP, 3)
+            var result = new HumanInterleaver(InterleaveStart.TOP, 3, 0.15)
                     .interleave(top, bottom, TestRandoms.fixedRandom());
 
             assertThat(result.getFirst()).isEqualTo(top.getFirst());
@@ -84,7 +100,7 @@ class HumanInterleaverTest {
             var top = deck.subList(0, 26);
             var bottom = deck.subList(26, 52);
 
-            var result = new HumanInterleaver(InterleaveStart.BOTTOM, 3)
+            var result = new HumanInterleaver(InterleaveStart.BOTTOM, 3, 0.15)
                     .interleave(top, bottom, TestRandoms.fixedRandom());
 
             assertThat(result.getFirst()).isEqualTo(bottom.getFirst());

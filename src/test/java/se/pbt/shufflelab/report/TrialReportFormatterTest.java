@@ -45,7 +45,7 @@ class TrialReportFormatterTest {
 
             String report = TrialReportFormatter.format(results);
 
-            assertTrue(report.contains("Experiment comparison (2 experiments)"));
+            assertTrue(report.contains("Trial comparison (2 trial runs)"));
             assertTrue(report.contains("Riffle - NOVICE"));
             assertTrue(report.contains("Riffle - EXPERT"));
             assertTrue(report.contains("100"));
@@ -130,7 +130,7 @@ class TrialReportFormatterTest {
             );
 
             assertEquals(
-                    "at least one experiment result is required",
+                    "at least one trial summary is required",
                     exception.getMessage()
             );
         }

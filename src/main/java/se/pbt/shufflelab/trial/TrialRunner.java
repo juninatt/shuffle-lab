@@ -3,7 +3,7 @@ package se.pbt.shufflelab.trial;
 import se.pbt.shufflelab.analysis.DeckAnalysis;
 import se.pbt.shufflelab.analysis.DeckAnalyzer;
 import se.pbt.shufflelab.deck.Deck;
-import se.pbt.shufflelab.deck.DeckFactory;
+import se.pbt.shufflelab.factory.DeckFactory;
 import se.pbt.shufflelab.manipulation.routine.Routine;
 
 import java.util.ArrayList;

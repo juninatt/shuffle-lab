@@ -28,10 +28,9 @@ public final class TrialReportFormatter {
     }
 
     /**
-     * Formats a series of experiment results into a plain-text comparison
-     * report.
+     * Formats a series of trial summaries into a plain-text comparison report.
      *
-     * @param results the experiment results to compare; at least one is required
+     * @param results the trial summaries to compare; at least one is required
      * @return the formatted report
      * @throws NullPointerException if {@code results} is {@code null}
      * @throws IllegalArgumentException if {@code results} is empty
@@ -40,7 +39,7 @@ public final class TrialReportFormatter {
         Objects.requireNonNull(results, "results must not be null");
 
         if (results.isEmpty()) {
-            throw new IllegalArgumentException("at least one experiment result is required");
+            throw new IllegalArgumentException("at least one trial summary is required");
         }
 
         StringBuilder report = new StringBuilder();
@@ -72,9 +71,9 @@ public final class TrialReportFormatter {
     private static void appendOverview(StringBuilder report, List<TrialSummary> results) {
         int labelWidth = labelWidthOf(results);
 
-        report.append("Experiment comparison (")
+        report.append("Trial comparison (")
                 .append(results.size())
-                .append(" experiments)")
+                .append(" trial runs)")
                 .append(System.lineSeparator())
                 .append(System.lineSeparator());
 

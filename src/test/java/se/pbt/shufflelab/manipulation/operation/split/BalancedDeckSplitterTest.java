@@ -3,8 +3,7 @@ package se.pbt.shufflelab.manipulation.operation.split;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
-import se.pbt.shufflelab.deck.DeckFactory;
-import se.pbt.shufflelab.manipulation.operation.split.BalancedDeckSplitter;
+import se.pbt.shufflelab.factory.DeckFactory;
 
 import java.util.Collection;
 import java.util.HashSet;

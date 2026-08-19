@@ -4,10 +4,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
-import se.pbt.shufflelab.deck.DeckFactory;
+import se.pbt.shufflelab.factory.DeckFactory;
+import se.pbt.shufflelab.factory.RoutineFactory;
+import se.pbt.shufflelab.factory.ShuffleFactory;
 import se.pbt.shufflelab.manipulation.operation.cut.DeckCutter;
 import se.pbt.shufflelab.manipulation.operation.split.BalancedDeckSplitter;
-import se.pbt.shufflelab.manipulation.shuffle.ShuffleFactory;
 import se.pbt.shufflelab.skill.SkillLevel;
 import se.pbt.shufflelab.skill.SkillProfile;
 

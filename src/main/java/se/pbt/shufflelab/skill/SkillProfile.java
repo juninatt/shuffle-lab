@@ -20,26 +20,35 @@ import java.util.Objects;
  *                                packet during a single interleaving step;
  *                                larger values produce a less controlled
  *                                interleave
+ * @param maxSplitDeviation the maximum number of cards by which a split point
+ *                          may deviate from the exact middle of the deck;
+ *                          larger values produce a less precise split
  * @param maxOverhandPacketSize the maximum number of cards transferred in one
  *                              packet during an {@link OverhandShuffle};
  *                              larger values preserve larger sections of the
  *                              original deck
- * @param maxSplitDeviation the maximum number of cards by which a split point
- *                          may deviate from the exact middle of the deck;
- *                          larger values produce a less precise split
+ * @param maxInterleaveImbalanceRatio the maximum allowed size imbalance
+ *                                    between the two packets handed to an
+ *                                    interleave step, expressed as a ratio of
+ *                                    the size difference to the total deck
+ *                                    size; must stay large enough to tolerate
+ *                                    this profile's own {@code maxSplitDeviation}
  */
 public record SkillProfile(
         int maxInterleavePacketSize,
         int maxSplitDeviation,
-        int maxOverhandPacketSize
+        int maxOverhandPacketSize,
+        double maxInterleaveImbalanceRatio
 ) {
 
     /**
      * Validates the numeric parameters of a skill profile.
      *
      * @throws IllegalArgumentException if either packet-size value is less
-     *                                  than one or if
-     *                                  {@code maxSplitDeviation} is negative
+     *                                  than one, if {@code maxSplitDeviation}
+     *                                  is negative, or if
+     *                                  {@code maxInterleaveImbalanceRatio} is
+     *                                  not greater than zero and at most one
      */
     public SkillProfile {
         if (maxInterleavePacketSize < 1) {
@@ -57,6 +66,12 @@ public record SkillProfile(
         if (maxOverhandPacketSize < 1) {
             throw new IllegalArgumentException(
                     "maxOverhandPacketSize must be at least 1"
+            );
+        }
+
+        if (maxInterleaveImbalanceRatio <= 0 || maxInterleaveImbalanceRatio > 1) {
+            throw new IllegalArgumentException(
+                    "maxInterleaveImbalanceRatio must be greater than 0 and at most 1"
             );
         }
     }
@@ -77,9 +92,9 @@ public record SkillProfile(
         Objects.requireNonNull(level, "level must not be null");
 
         return switch (level) {
-            case NOVICE -> new SkillProfile(8, 6, 8);
-            case INTERMEDIATE -> new SkillProfile(4, 3, 4);
-            case EXPERT -> new SkillProfile(2, 1, 2);
+            case NOVICE -> new SkillProfile(8, 6, 8, 0.25);
+            case INTERMEDIATE -> new SkillProfile(4, 3, 4, 0.15);
+            case EXPERT -> new SkillProfile(2, 1, 2, 0.05);
         };
     }
 }

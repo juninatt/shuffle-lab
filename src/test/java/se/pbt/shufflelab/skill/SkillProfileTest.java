@@ -22,6 +22,7 @@ class SkillProfileTest {
             assertThat(profile.maxInterleavePacketSize()).isEqualTo(8);
             assertThat(profile.maxSplitDeviation()).isEqualTo(6);
             assertThat(profile.maxOverhandPacketSize()).isEqualTo(8);
+            assertThat(profile.maxInterleaveImbalanceRatio()).isEqualTo(0.25);
         }
 
         @Test
@@ -32,6 +33,7 @@ class SkillProfileTest {
             assertThat(profile.maxInterleavePacketSize()).isEqualTo(4);
             assertThat(profile.maxSplitDeviation()).isEqualTo(3);
             assertThat(profile.maxOverhandPacketSize()).isEqualTo(4);
+            assertThat(profile.maxInterleaveImbalanceRatio()).isEqualTo(0.15);
         }
 
         @Test
@@ -42,6 +44,26 @@ class SkillProfileTest {
             assertThat(profile.maxInterleavePacketSize()).isEqualTo(2);
             assertThat(profile.maxSplitDeviation()).isEqualTo(1);
             assertThat(profile.maxOverhandPacketSize()).isEqualTo(2);
+            assertThat(profile.maxInterleaveImbalanceRatio()).isEqualTo(0.05);
+        }
+
+        @Test
+        @DisplayName("Every predefined profile's imbalance ratio should tolerate its own split deviation")
+        void everyProfileShouldToleratesItsOwnSplitDeviation() {
+            int deckSize = 52;
+
+            for (SkillLevel level : SkillLevel.values()) {
+                SkillProfile profile = SkillProfile.withLevel(level);
+
+                double worstCaseRatio = (2.0 * profile.maxSplitDeviation()) / deckSize;
+
+                assertThat(profile.maxInterleaveImbalanceRatio())
+                        .withFailMessage(
+                                "%s tolerates a worst-case ratio of %.4f but only allows %.4f",
+                                level, worstCaseRatio, profile.maxInterleaveImbalanceRatio()
+                        )
+                        .isGreaterThanOrEqualTo(worstCaseRatio);
+            }
         }
     }
 
@@ -55,12 +77,14 @@ class SkillProfileTest {
             SkillProfile profile = new SkillProfile(
                     5,
                     2,
-                    6
+                    6,
+                    0.2
             );
 
             assertThat(profile.maxInterleavePacketSize()).isEqualTo(5);
             assertThat(profile.maxSplitDeviation()).isEqualTo(2);
             assertThat(profile.maxOverhandPacketSize()).isEqualTo(6);
+            assertThat(profile.maxInterleaveImbalanceRatio()).isEqualTo(0.2);
         }
 
         @Test
@@ -69,16 +93,18 @@ class SkillProfileTest {
             SkillProfile profile = new SkillProfile(
                     3,
                     4,
-                    7
+                    7,
+                    0.3
             );
 
             assertThat(profile)
                     .extracting(
                             SkillProfile::maxInterleavePacketSize,
                             SkillProfile::maxSplitDeviation,
-                            SkillProfile::maxOverhandPacketSize
+                            SkillProfile::maxOverhandPacketSize,
+                            SkillProfile::maxInterleaveImbalanceRatio
                     )
-                    .containsExactly(3, 4, 7);
+                    .containsExactly(3, 4, 7, 0.3);
         }
     }
 
@@ -100,7 +126,8 @@ class SkillProfileTest {
             assertThatThrownBy(() -> new SkillProfile(
                     0,
                     2,
-                    4
+                    4,
+                    0.15
             ))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("maxInterleavePacketSize must be at least 1");
@@ -112,7 +139,8 @@ class SkillProfileTest {
             assertThatThrownBy(() -> new SkillProfile(
                     2,
                     -1,
-                    4
+                    4,
+                    0.15
             ))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("maxSplitDeviation must not be negative");
@@ -124,7 +152,8 @@ class SkillProfileTest {
             assertThatThrownBy(() -> new SkillProfile(
                     2,
                     1,
-                    0
+                    0,
+                    0.15
             ))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("maxOverhandPacketSize must be at least 1");
@@ -136,7 +165,8 @@ class SkillProfileTest {
             assertThatThrownBy(() -> new SkillProfile(
                     -1,
                     2,
-                    4
+                    4,
+                    0.15
             ))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("maxInterleavePacketSize must be at least 1");
@@ -148,7 +178,8 @@ class SkillProfileTest {
             assertThatThrownBy(() -> new SkillProfile(
                     2,
                     1,
-                    -1
+                    -1,
+                    0.15
             ))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("maxOverhandPacketSize must be at least 1");
@@ -160,10 +191,63 @@ class SkillProfileTest {
             SkillProfile profile = new SkillProfile(
                     2,
                     0,
-                    2
+                    2,
+                    0.15
             );
 
             assertThat(profile.maxSplitDeviation()).isZero();
+        }
+
+        @Test
+        @DisplayName("Should reject a zero imbalance ratio")
+        void shouldRejectZeroImbalanceRatio() {
+            assertThatThrownBy(() -> new SkillProfile(
+                    2,
+                    1,
+                    2,
+                    0.0
+            ))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("maxInterleaveImbalanceRatio must be greater than 0 and at most 1");
+        }
+
+        @Test
+        @DisplayName("Should reject a negative imbalance ratio")
+        void shouldRejectNegativeImbalanceRatio() {
+            assertThatThrownBy(() -> new SkillProfile(
+                    2,
+                    1,
+                    2,
+                    -0.1
+            ))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("maxInterleaveImbalanceRatio must be greater than 0 and at most 1");
+        }
+
+        @Test
+        @DisplayName("Should reject an imbalance ratio above one")
+        void shouldRejectImbalanceRatioAboveOne() {
+            assertThatThrownBy(() -> new SkillProfile(
+                    2,
+                    1,
+                    2,
+                    1.1
+            ))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("maxInterleaveImbalanceRatio must be greater than 0 and at most 1");
+        }
+
+        @Test
+        @DisplayName("Should allow an imbalance ratio of exactly one")
+        void shouldAllowImbalanceRatioOfExactlyOne() {
+            SkillProfile profile = new SkillProfile(
+                    2,
+                    1,
+                    2,
+                    1.0
+            );
+
+            assertThat(profile.maxInterleaveImbalanceRatio()).isEqualTo(1.0);
         }
     }
 }

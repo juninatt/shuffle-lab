@@ -1,5 +1,7 @@
-package se.pbt.shufflelab.deck;
+package se.pbt.shufflelab.factory;
 
+import se.pbt.shufflelab.deck.Deck;
+import se.pbt.shufflelab.deck.DeckOrder;
 import se.pbt.shufflelab.deck.card.Card;
 import se.pbt.shufflelab.deck.card.Rank;
 import se.pbt.shufflelab.deck.card.Suit;

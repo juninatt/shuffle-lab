@@ -1,8 +1,11 @@
-package se.pbt.shufflelab.manipulation.shuffle;
+package se.pbt.shufflelab.factory;
 
 import se.pbt.shufflelab.manipulation.operation.interleave.HumanInterleaver;
 import se.pbt.shufflelab.manipulation.operation.interleave.InterleaveStart;
 import se.pbt.shufflelab.manipulation.operation.split.BalancedDeckSplitter;
+import se.pbt.shufflelab.manipulation.shuffle.OverhandShuffle;
+import se.pbt.shufflelab.manipulation.shuffle.RiffleShuffle;
+import se.pbt.shufflelab.manipulation.shuffle.Shuffle;
 import se.pbt.shufflelab.skill.SkillLevel;
 import se.pbt.shufflelab.skill.SkillProfile;
 
@@ -44,7 +47,8 @@ public final class ShuffleFactory {
                 new BalancedDeckSplitter(profile.maxSplitDeviation()),
                 new HumanInterleaver(
                         InterleaveStart.BOTTOM,
-                        profile.maxInterleavePacketSize()
+                        profile.maxInterleavePacketSize(),
+                        profile.maxInterleaveImbalanceRatio()
                 )
         );
     }

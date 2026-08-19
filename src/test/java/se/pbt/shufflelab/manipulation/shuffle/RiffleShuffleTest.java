@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
-import se.pbt.shufflelab.deck.DeckFactory;
+import se.pbt.shufflelab.factory.DeckFactory;
 import se.pbt.shufflelab.manipulation.operation.interleave.HumanInterleaver;
 import se.pbt.shufflelab.manipulation.operation.interleave.InterleaveStart;
 import se.pbt.shufflelab.manipulation.operation.interleave.PerfectInterleaver;
@@ -93,7 +93,7 @@ class RiffleShuffleTest {
 
             var operation = new RiffleShuffle(
                     new BalancedDeckSplitter(3),
-                    new HumanInterleaver(InterleaveStart.BOTTOM, 3)
+                    new HumanInterleaver(InterleaveStart.BOTTOM, 3, 0.15)
             );
 
             var random = TestRandoms.fixedRandom();
@@ -112,7 +112,7 @@ class RiffleShuffleTest {
 
             var operation = new RiffleShuffle(
                     new BalancedDeckSplitter(3),
-                    new HumanInterleaver(InterleaveStart.BOTTOM, 3)
+                    new HumanInterleaver(InterleaveStart.BOTTOM, 3, 0.15)
             );
 
             var random = TestRandoms.fixedRandom();
@@ -132,7 +132,7 @@ class RiffleShuffleTest {
 
             var humanOperation = new RiffleShuffle(
                     new BalancedDeckSplitter(0),
-                    new HumanInterleaver(InterleaveStart.BOTTOM, 3)
+                    new HumanInterleaver(InterleaveStart.BOTTOM, 3, 0.15)
             );
 
             var perfectOperation = new RiffleShuffle(

@@ -1,9 +1,10 @@
-package se.pbt.shufflelab.manipulation.routine;
+package se.pbt.shufflelab.factory;
 
 import se.pbt.shufflelab.manipulation.operation.cut.DeckCutter;
 import se.pbt.shufflelab.manipulation.operation.split.BalancedDeckSplitter;
+import se.pbt.shufflelab.manipulation.routine.Routine;
+import se.pbt.shufflelab.manipulation.routine.SequentialRoutine;
 import se.pbt.shufflelab.manipulation.shuffle.Shuffle;
-import se.pbt.shufflelab.manipulation.shuffle.ShuffleFactory;
 import se.pbt.shufflelab.skill.SkillLevel;
 import se.pbt.shufflelab.skill.SkillProfile;
 

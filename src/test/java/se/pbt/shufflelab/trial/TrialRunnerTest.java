@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
 import se.pbt.shufflelab.analysis.DeckAnalysis;
 import se.pbt.shufflelab.manipulation.routine.Routine;
-import se.pbt.shufflelab.manipulation.routine.RoutineFactory;
+import se.pbt.shufflelab.factory.RoutineFactory;
 import se.pbt.shufflelab.skill.SkillLevel;
 
 import java.util.List;
