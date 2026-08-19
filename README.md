@@ -29,9 +29,17 @@ A routine defines *what* is performed, while a `SkillProfile` defines *how preci
 This allows the same shuffle routine to be simulated at different skill levels without changing its structure. 
 Custom skill profiles can also be created for experimentation.
 
+### Analysis and experimentation
+
+A shuffled deck can be compared against its original order to measure card displacement and how much of the
+original card order survives the shuffle. Running a routine repeatedly and aggregating the results produces
+summary statistics — mean, median, minimum, maximum, and standard deviation — for each measure, making it
+possible to compare configurations, such as different skill levels, against each other. Results can be
+formatted as a plain-text comparison report, either for manual inspection or as part of a larger run.
+
 ### Features
 
-**Current**  
+**Current**
 
 - Standard 52-card deck generation with multiple starting deck orders
 - Deck cutting
@@ -42,17 +50,22 @@ Custom skill profiles can also be created for experimentation.
 - Pile shuffles
 - Mongean shuffles
 - In and out Faro shuffles
-- Skill-based shuffle configuration
+- Skill-based shuffle configuration, including custom skill profiles
 - Configurable shuffle architecture based on operations, shuffles, and routines
+- Deck shuffle analysis: card displacement and preserved-order measurement
+- Aggregated statistics across repeated trials
+- Plain-text comparison reporting across multiple trial runs
+- A runnable application comparing configured routines and skill levels
 - Validation of shuffle constraints
 - Comprehensive unit tests using JUnit 5 and AssertJ
 
 **Planned**
 
+- Add more metrics
+- Add more shuffles & routines
+- Add how-to-use in readme
 - Additional deck splitters and cutting strategies
 - Additional shuffle techniques
 - Additional shuffle routines
-- Custom skill profiles
-- Shuffle analysis and comparison tools
-- Statistical analysis of shuffle quality
 - Performance benchmarking
+- Add visualization
