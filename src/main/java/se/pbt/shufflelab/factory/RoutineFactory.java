@@ -4,6 +4,7 @@ import se.pbt.shufflelab.manipulation.operation.cut.DeckCutter;
 import se.pbt.shufflelab.manipulation.operation.split.BalancedDeckSplitter;
 import se.pbt.shufflelab.manipulation.routine.Routine;
 import se.pbt.shufflelab.manipulation.routine.RoutineProtocol;
+import se.pbt.shufflelab.manipulation.shuffle.PileShuffle;
 import se.pbt.shufflelab.manipulation.shuffle.Shuffle;
 import se.pbt.shufflelab.skill.SkillLevel;
 import se.pbt.shufflelab.skill.SkillProfile;
@@ -36,6 +37,18 @@ public final class RoutineFactory {
      * {@link #standardRiffleShuffle(SkillLevel)}.
      */
     private static final int STANDARD_RIFFLE_REPETITIONS = 3;
+
+    /**
+     * The number of riffle shuffles performed after the overhand shuffle in
+     * {@link #casualShuffleSequence(SkillLevel)}.
+     */
+    private static final int CASUAL_RIFFLE_REPETITIONS = 2;
+
+    /**
+     * The number of piles used by the pile shuffle in
+     * {@link #pileShuffleThenRiffle(SkillLevel)}.
+     */
+    private static final int PILE_SHUFFLE_PILE_COUNT = 4;
 
     private RoutineFactory() {
         throw new UnsupportedOperationException("Utility class");
@@ -133,5 +146,69 @@ public final class RoutineFactory {
         operations.add(deckCutter::cut);
 
         return new Routine("Standard riffle shuffle", operations);
+    }
+
+    /**
+     * Creates a casual shuffle sequence.
+     *
+     * <p>Models how many players shuffle informally: a single overhand
+     * shuffle to loosen the deck, followed by {@value #CASUAL_RIFFLE_REPETITIONS}
+     * human-style riffle shuffles to actually randomise it, finished with a
+     * deck cut. Every step uses the {@link SkillProfile} associated with the
+     * supplied {@link SkillLevel}.</p>
+     *
+     * @param skillLevel the simulated performer skill level
+     * @return a casual shuffle sequence
+     * @throws NullPointerException if {@code skillLevel} is {@code null}
+     */
+    public static RoutineProtocol casualShuffleSequence(SkillLevel skillLevel) {
+        Objects.requireNonNull(skillLevel, "skillLevel must not be null");
+
+        SkillProfile profile = SkillProfile.withLevel(skillLevel);
+
+        List<Shuffle> operations = new ArrayList<>();
+        operations.add(ShuffleFactory.overhand(skillLevel));
+        operations.addAll(Collections.nCopies(CASUAL_RIFFLE_REPETITIONS, ShuffleFactory.riffle(skillLevel)));
+
+        DeckCutter deckCutter = new DeckCutter(
+                new BalancedDeckSplitter(profile.maxSplitDeviation())
+        );
+
+        operations.add(deckCutter::cut);
+
+        return new Routine("Casual shuffle sequence", operations);
+    }
+
+    /**
+     * Creates a pile shuffle followed by a riffle shuffle.
+     *
+     * <p>A pile shuffle alone rearranges a deck into a visibly different but
+     * highly structured order — it does not introduce genuine randomness by
+     * itself. This routine deals the deck into {@value #PILE_SHUFFLE_PILE_COUNT}
+     * piles, then follows up with one human-style riffle shuffle and a final
+     * cut to actually randomise the result. The riffle and the cut use the
+     * {@link SkillProfile} associated with the supplied {@link SkillLevel};
+     * the pile shuffle itself is deterministic and unaffected by skill.</p>
+     *
+     * @param skillLevel the simulated performer skill level
+     * @return a pile shuffle followed by a riffle shuffle
+     * @throws NullPointerException if {@code skillLevel} is {@code null}
+     */
+    public static RoutineProtocol pileShuffleThenRiffle(SkillLevel skillLevel) {
+        Objects.requireNonNull(skillLevel, "skillLevel must not be null");
+
+        SkillProfile profile = SkillProfile.withLevel(skillLevel);
+
+        List<Shuffle> operations = new ArrayList<>();
+        operations.add(new PileShuffle(PILE_SHUFFLE_PILE_COUNT));
+        operations.add(ShuffleFactory.riffle(skillLevel));
+
+        DeckCutter deckCutter = new DeckCutter(
+                new BalancedDeckSplitter(profile.maxSplitDeviation())
+        );
+
+        operations.add(deckCutter::cut);
+
+        return new Routine("Pile shuffle then riffle", operations);
     }
 }
