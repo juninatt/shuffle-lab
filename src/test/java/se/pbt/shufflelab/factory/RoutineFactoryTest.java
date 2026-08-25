@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
 import se.pbt.shufflelab.manipulation.operation.cut.DeckCutter;
 import se.pbt.shufflelab.manipulation.operation.split.BalancedDeckSplitter;
-import se.pbt.shufflelab.manipulation.routine.Routine;
+import se.pbt.shufflelab.manipulation.routine.RoutineProtocol;
 import se.pbt.shufflelab.skill.SkillLevel;
 import se.pbt.shufflelab.skill.SkillProfile;
 
@@ -27,7 +27,7 @@ class RoutineFactoryTest {
         @Test
         @DisplayName("Should create a simple riffle shuffle routine")
         void shouldCreateSimpleRiffleShuffleRoutine() {
-            Routine routine = RoutineFactory.simpleRiffleShuffle(SkillLevel.EXPERT);
+            RoutineProtocol routine = RoutineFactory.simpleRiffleShuffle(SkillLevel.EXPERT);
 
             assertThat(routine)
                     .as("Factory should return a configured routine")
@@ -46,7 +46,7 @@ class RoutineFactoryTest {
             var deck = DeckFactory.standardDeck();
             var originalCards = new HashSet<>(deck);
 
-            Routine routine = RoutineFactory.simpleRiffleShuffle(SkillLevel.EXPERT);
+            RoutineProtocol routine = RoutineFactory.simpleRiffleShuffle(SkillLevel.EXPERT);
 
             routine.execute(deck, TestRandoms.fixedRandom());
 
@@ -60,7 +60,7 @@ class RoutineFactoryTest {
             var deck = DeckFactory.standardDeck();
             var originalOrder = List.copyOf(deck);
 
-            Routine routine = RoutineFactory.simpleRiffleShuffle(SkillLevel.EXPERT);
+            RoutineProtocol routine = RoutineFactory.simpleRiffleShuffle(SkillLevel.EXPERT);
 
             routine.execute(deck, TestRandoms.fixedRandom());
 
@@ -75,8 +75,8 @@ class RoutineFactoryTest {
             var firstDeck = DeckFactory.standardDeck();
             var secondDeck = DeckFactory.standardDeck();
 
-            Routine firstRoutine = RoutineFactory.simpleRiffleShuffle(SkillLevel.INTERMEDIATE);
-            Routine secondRoutine = RoutineFactory.simpleRiffleShuffle(SkillLevel.INTERMEDIATE);
+            RoutineProtocol firstRoutine = RoutineFactory.simpleRiffleShuffle(SkillLevel.INTERMEDIATE);
+            RoutineProtocol secondRoutine = RoutineFactory.simpleRiffleShuffle(SkillLevel.INTERMEDIATE);
 
             firstRoutine.execute(firstDeck, TestRandoms.seededRandom(42));
             secondRoutine.execute(secondDeck, TestRandoms.seededRandom(42));
@@ -100,7 +100,7 @@ class RoutineFactoryTest {
             SkillLevel skillLevel = SkillLevel.INTERMEDIATE;
             SkillProfile profile = SkillProfile.withLevel(skillLevel);
 
-            Routine routine = RoutineFactory.simpleRiffleShuffle(skillLevel);
+            RoutineProtocol routine = RoutineFactory.simpleRiffleShuffle(skillLevel);
 
             var routineRandom = TestRandoms.seededRandom(42);
             var expectedRandom = TestRandoms.seededRandom(42);

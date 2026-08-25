@@ -3,11 +3,13 @@ package se.pbt.shufflelab.factory;
 import se.pbt.shufflelab.manipulation.operation.cut.DeckCutter;
 import se.pbt.shufflelab.manipulation.operation.split.BalancedDeckSplitter;
 import se.pbt.shufflelab.manipulation.routine.Routine;
-import se.pbt.shufflelab.manipulation.routine.SequentialRoutine;
+import se.pbt.shufflelab.manipulation.routine.RoutineProtocol;
 import se.pbt.shufflelab.manipulation.shuffle.Shuffle;
 import se.pbt.shufflelab.skill.SkillLevel;
 import se.pbt.shufflelab.skill.SkillProfile;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,6 +24,18 @@ import java.util.Objects;
  * additional routines can be introduced without affecting the public API.
  */
 public final class RoutineFactory {
+
+    /**
+     * The number of times a single overhand shuffle is repeated by
+     * {@link #repeatedOverhandShuffle(SkillLevel)}.
+     */
+    private static final int OVERHAND_REPETITIONS = 3;
+
+    /**
+     * The number of riffle shuffles performed before the final cut in
+     * {@link #standardRiffleShuffle(SkillLevel)}.
+     */
+    private static final int STANDARD_RIFFLE_REPETITIONS = 3;
 
     private RoutineFactory() {
         throw new UnsupportedOperationException("Utility class");
@@ -41,7 +55,7 @@ public final class RoutineFactory {
      * @return a simple riffle shuffle routine
      * @throws NullPointerException if {@code skillLevel} is {@code null}
      */
-    public static Routine simpleRiffleShuffle(SkillLevel skillLevel) {
+    public static RoutineProtocol simpleRiffleShuffle(SkillLevel skillLevel) {
         Objects.requireNonNull(skillLevel, "skillLevel must not be null");
 
         SkillProfile profile = SkillProfile.withLevel(skillLevel);
@@ -54,11 +68,70 @@ public final class RoutineFactory {
 
         Shuffle cut = deckCutter::cut;
 
-        return new SequentialRoutine(
+        return new Routine(
+                "Simple riffle shuffle",
                 List.of(
                         riffleShuffle,
                         cut
                 )
         );
+    }
+
+    /**
+     * Creates a repeated overhand shuffle routine.
+     *
+     * <p>A single overhand shuffle only transfers a few packets and leaves
+     * most of the original card order intact, so this routine repeats the
+     * same overhand shuffle {@value #OVERHAND_REPETITIONS} times in
+     * sequence, modelling how a performer typically overhand-shuffles a
+     * deck several times in a row rather than just once. Every repetition
+     * uses the {@link SkillProfile} associated with the supplied
+     * {@link SkillLevel}.</p>
+     *
+     * @param skillLevel the simulated performer skill level
+     * @return a repeated overhand shuffle routine
+     * @throws NullPointerException if {@code skillLevel} is {@code null}
+     */
+    public static RoutineProtocol repeatedOverhandShuffle(SkillLevel skillLevel) {
+        Objects.requireNonNull(skillLevel, "skillLevel must not be null");
+
+        Shuffle overhandShuffle = ShuffleFactory.overhand(skillLevel);
+
+        return new Routine(
+                "Repeated overhand shuffle",
+                Collections.nCopies(OVERHAND_REPETITIONS, overhandShuffle)
+        );
+    }
+
+    /**
+     * Creates a standard riffle shuffle routine.
+     *
+     * <p>A single riffle shuffle does not sufficiently randomise a deck on
+     * its own, so this routine performs {@value #STANDARD_RIFFLE_REPETITIONS}
+     * human-style riffle shuffles before finishing with a single deck cut,
+     * modelling the shuffling sequence commonly used at a casino table
+     * before a new round is dealt. Every riffle and the final cut use the
+     * {@link SkillProfile} associated with the supplied {@link SkillLevel}.</p>
+     *
+     * @param skillLevel the simulated performer skill level
+     * @return a standard riffle shuffle routine
+     * @throws NullPointerException if {@code skillLevel} is {@code null}
+     */
+    public static RoutineProtocol standardRiffleShuffle(SkillLevel skillLevel) {
+        Objects.requireNonNull(skillLevel, "skillLevel must not be null");
+
+        SkillProfile profile = SkillProfile.withLevel(skillLevel);
+
+        List<Shuffle> operations = new ArrayList<>(
+                Collections.nCopies(STANDARD_RIFFLE_REPETITIONS, ShuffleFactory.riffle(skillLevel))
+        );
+
+        DeckCutter deckCutter = new DeckCutter(
+                new BalancedDeckSplitter(profile.maxSplitDeviation())
+        );
+
+        operations.add(deckCutter::cut);
+
+        return new Routine("Standard riffle shuffle", operations);
     }
 }

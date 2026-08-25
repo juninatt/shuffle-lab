@@ -15,8 +15,8 @@ import java.util.random.RandomGenerator;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@DisplayName("Sequential routine")
-class SequentialRoutineTest {
+@DisplayName("Routine")
+class RoutineTest {
 
     @Nested
     @DisplayName("Execution order")
@@ -31,7 +31,7 @@ class SequentialRoutineTest {
             Shuffle second = (deck, random) -> callOrder.add(2);
             Shuffle third = (deck, random) -> callOrder.add(3);
 
-            var routine = new SequentialRoutine(List.of(first, second, third));
+            var routine = new Routine("Test Routine" ,List.of(first, second, third));
 
             routine.execute(DeckFactory.standardDeck(), TestRandoms.fixedRandom());
 
@@ -45,7 +45,7 @@ class SequentialRoutineTest {
 
             Shuffle onlyOperation = (deck, random) -> callOrder.add(1);
 
-            var routine = new SequentialRoutine(List.of(onlyOperation));
+            var routine = new Routine("Test Routine" ,List.of(onlyOperation));
 
             routine.execute(DeckFactory.standardDeck(), TestRandoms.fixedRandom());
 
@@ -58,7 +58,7 @@ class SequentialRoutineTest {
             var deck = DeckFactory.standardDeck();
             var original = List.copyOf(deck);
 
-            var routine = new SequentialRoutine(List.of());
+            var routine = new Routine("Test Routine" ,List.of());
 
             routine.execute(deck, TestRandoms.fixedRandom());
 
@@ -78,7 +78,7 @@ class SequentialRoutineTest {
 
             Shuffle reverse = (currentDeck, random) -> Collections.reverse(currentDeck);
 
-            var routine = new SequentialRoutine(List.of(reverse, reverse));
+            var routine = new Routine("Test Routine" ,List.of(reverse, reverse));
 
             routine.execute(deck, TestRandoms.fixedRandom());
 
@@ -96,7 +96,7 @@ class SequentialRoutineTest {
             Shuffle first = (deck, random) -> capturedRandoms.add(random);
             Shuffle second = (deck, random) -> capturedRandoms.add(random);
 
-            var routine = new SequentialRoutine(List.of(first, second));
+            var routine = new Routine("Test Routine" ,List.of(first, second));
             var suppliedRandom = TestRandoms.fixedRandom();
 
             routine.execute(DeckFactory.standardDeck(), suppliedRandom);
@@ -118,7 +118,7 @@ class SequentialRoutineTest {
             Shuffle onlyOperation = (deck, random) -> callOrder.add(1);
 
             List<Shuffle> mutableOperations = new ArrayList<>(List.of(onlyOperation));
-            var routine = new SequentialRoutine(mutableOperations);
+            var routine = new Routine("Test Routine" ,mutableOperations);
 
             mutableOperations.clear();
 
@@ -137,9 +137,19 @@ class SequentialRoutineTest {
         @Test
         @DisplayName("Should reject a null list of operations")
         void shouldRejectNullOperations() {
-            assertThatThrownBy(() -> new SequentialRoutine(null))
+            assertThatThrownBy(() -> new Routine("Test Routine" ,null))
                     .isInstanceOf(NullPointerException.class)
                     .hasMessage("operations must not be null");
         }
+    }
+
+    @Test
+    @DisplayName("Should reject a null name")
+    void shouldRejectNullName() {
+        Shuffle noop = (deck, random) -> { };
+
+        assertThatThrownBy(() -> new Routine(null, List.of(noop)))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("name must not be null");
     }
 }

@@ -3,8 +3,8 @@ package se.pbt.shufflelab;
 import se.pbt.shufflelab.analysis.AggregatedDeckAnalysis;
 import se.pbt.shufflelab.analysis.DeckAnalysis;
 import se.pbt.shufflelab.analysis.DeckAnalysisAggregator;
-import se.pbt.shufflelab.manipulation.routine.Routine;
 import se.pbt.shufflelab.factory.RoutineFactory;
+import se.pbt.shufflelab.manipulation.routine.RoutineProtocol;
 import se.pbt.shufflelab.report.TrialReportFormatter;
 import se.pbt.shufflelab.skill.SkillLevel;
 import se.pbt.shufflelab.trial.TrialRunner;
@@ -54,7 +54,7 @@ public class ShuffleLabApp {
         List<TrialSummary> summaries = new ArrayList<>();
 
         for (SkillLevel skillLevel : SkillLevel.values()) {
-            Routine routine = RoutineFactory.simpleRiffleShuffle(skillLevel);
+            RoutineProtocol routine = RoutineFactory.simpleRiffleShuffle(skillLevel);
 
             List<DeckAnalysis> analyses = TrialRunner.run(routine, TRIALS, random);
             AggregatedDeckAnalysis aggregated = DeckAnalysisAggregator.aggregate(analyses);

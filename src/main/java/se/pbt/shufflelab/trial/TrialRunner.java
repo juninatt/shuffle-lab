@@ -4,7 +4,7 @@ import se.pbt.shufflelab.analysis.DeckAnalysis;
 import se.pbt.shufflelab.analysis.DeckAnalyzer;
 import se.pbt.shufflelab.deck.Deck;
 import se.pbt.shufflelab.factory.DeckFactory;
-import se.pbt.shufflelab.manipulation.routine.Routine;
+import se.pbt.shufflelab.manipulation.routine.RoutineProtocol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +12,9 @@ import java.util.Objects;
 import java.util.random.RandomGenerator;
 
 /**
- * Runs a {@link Routine} repeatedly against fresh standard decks and
- * analyzes the outcome of each run.
+ * Runs a {@link RoutineProtocol} repeatedly against fresh standard decks,
+ * to produce a large enough sample for reliable statistical conclusions
+ * rather than relying on a single, high-variance outcome.
  *
  * <p>Each trial starts from an identical, freshly created standard deck, so
  * that results only reflect the routine's own behavior and the randomness
@@ -38,7 +39,7 @@ public final class TrialRunner {
      *                               {@code null}
      * @throws IllegalArgumentException if {@code trials} is less than 1
      */
-    public static List<DeckAnalysis> run(Routine routine, int trials, RandomGenerator random) {
+    public static List<DeckAnalysis> run(RoutineProtocol routine, int trials, RandomGenerator random) {
         Objects.requireNonNull(routine, "routine must not be null");
         Objects.requireNonNull(random, "random must not be null");
 

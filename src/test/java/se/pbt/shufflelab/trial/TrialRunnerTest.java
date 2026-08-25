@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.TestRandoms;
 import se.pbt.shufflelab.analysis.DeckAnalysis;
-import se.pbt.shufflelab.manipulation.routine.Routine;
 import se.pbt.shufflelab.factory.RoutineFactory;
+import se.pbt.shufflelab.manipulation.routine.RoutineProtocol;
 import se.pbt.shufflelab.skill.SkillLevel;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TrialRunnerTest {
 
-    private static final Routine ROUTINE = RoutineFactory.simpleRiffleShuffle(SkillLevel.EXPERT);
+    private static final RoutineProtocol ROUTINE = RoutineFactory.simpleRiffleShuffle(SkillLevel.EXPERT);
 
     @Nested
     class Execution {

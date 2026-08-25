@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.analysis.AggregatedDeckAnalysis;
 import se.pbt.shufflelab.analysis.DeckAnalysis;
 import se.pbt.shufflelab.analysis.DeckAnalysisAggregator;
-import se.pbt.shufflelab.manipulation.routine.Routine;
 import se.pbt.shufflelab.factory.RoutineFactory;
+import se.pbt.shufflelab.manipulation.routine.RoutineProtocol;
 import se.pbt.shufflelab.report.TrialReportFormatter;
 import se.pbt.shufflelab.skill.SkillLevel;
 import se.pbt.shufflelab.trial.TrialRunner;
@@ -21,19 +21,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Exercises the full pipeline from running a routine through to a formatted
- * report, using a real {@link Routine} and real randomness.
+ * report, using a real {@link RoutineProtocol} and real randomness.
  *
  * <p>Unit tests elsewhere in the project cover each step in isolation with
  * hand-built data. This test instead verifies that the steps actually
  * produce a coherent result when wired together, without depending on
- * {@code Main} or touching the console or the filesystem.
+ * {@code ShuffleLabApp} or touching the console or the filesystem.
  */
 class TrialReportPipelineIntegrationTest {
 
     @Test
     void shouldProduceACompleteReportFromARealRoutine() {
         RandomGenerator random = TestRandoms.fixedRandom();
-        Routine routine = RoutineFactory.simpleRiffleShuffle(SkillLevel.EXPERT);
+        RoutineProtocol routine = RoutineFactory.simpleRiffleShuffle(SkillLevel.EXPERT);
 
         List<DeckAnalysis> analyses = TrialRunner.run(routine, 50, random);
         AggregatedDeckAnalysis aggregated = DeckAnalysisAggregator.aggregate(analyses);
@@ -98,7 +98,7 @@ class TrialReportPipelineIntegrationTest {
     }
 
     private static TrialSummary summaryFor(SkillLevel skillLevel, RandomGenerator random) {
-        Routine routine = RoutineFactory.simpleRiffleShuffle(skillLevel);
+        RoutineProtocol routine = RoutineFactory.simpleRiffleShuffle(skillLevel);
         List<DeckAnalysis> analyses = TrialRunner.run(routine, 20, random);
         AggregatedDeckAnalysis aggregated = DeckAnalysisAggregator.aggregate(analyses);
 
