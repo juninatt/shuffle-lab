@@ -1,9 +1,12 @@
 package se.pbt.shufflelab;
 
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 import se.pbt.shufflelab.analysis.AggregatedDeckAnalysis;
 import se.pbt.shufflelab.analysis.DeckAnalysis;
 import se.pbt.shufflelab.analysis.DeckAnalysisAggregator;
-import se.pbt.shufflelab.factory.RoutineFactory;
+import se.pbt.shufflelab.factory.RoutineCatalog;
 import se.pbt.shufflelab.manipulation.routine.RoutineProtocol;
 import se.pbt.shufflelab.report.TrialReportFormatter;
 import se.pbt.shufflelab.skill.SkillLevel;
@@ -16,67 +19,113 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Callable;
 import java.util.random.RandomGenerator;
 
 /**
- * Entry point for running a fixed set of shuffle trials and reporting the
+ * Command-line entry point for running shuffle routines and reporting the
  * results.
  *
- * <p>Which routines, skill levels, and trial count are compared is currently
- * hardcoded below. As {@link RoutineFactory} grows to expose more named
- * routines, more trial runs can be added here to include them.
+ * <p>Which routine(s) and skill level(s) to compare, how many trials to
+ * run, and where to write the resulting report are all supplied as
+ * command-line options rather than hardcoded, so a comparison can be run
+ * without editing and recompiling this class.</p>
  */
-public class ShuffleLabApp {
+@Command(
+        name = "shufflelab",
+        description = "Run shuffle routines and compare how well they randomise a deck.",
+        mixinStandardHelpOptions = true
+)
+public class ShuffleLabApp implements Callable<Integer> {
 
-    private static final int TRIALS = 1000;
-    private static final Path REPORT_PATH = Path.of("shuffle-lab-report.txt");
+    @Option(
+            names = {"-r", "--routine"},
+            description = "Routine(s) to run. Valid values: ${COMPLETION-CANDIDATES}. Omit to run all.",
+            arity = "1..*"
+    )
+    private RoutineCatalog[] routines;
 
-    public static void main(String[] args) {
+    @Option(
+            names = {"-s", "--skill"},
+            description = "Skill level(s) to compare. Valid values: ${COMPLETION-CANDIDATES}. Omit to run all.",
+            arity = "1..*"
+    )
+    private SkillLevel[] skillLevels;
+
+    @Option(
+            names = {"-t", "--trials"},
+            description = "Number of trials per routine/skill combination (default: ${DEFAULT-VALUE})",
+            defaultValue = "1000"
+    )
+    private int trials;
+
+    @Option(
+            names = {"-o", "--out"},
+            description = "Output file path (default: ${DEFAULT-VALUE})",
+            defaultValue = "shuffle-lab-report.txt"
+    )
+    private Path outputPath;
+
+    @Override
+    public Integer call() {
         RandomGenerator random = new Random();
 
-        List<TrialSummary> summaries = runTrials(random);
+        RoutineCatalog[] selectedRoutines = routines != null ? routines : RoutineCatalog.values();
+        SkillLevel[] selectedSkillLevels = skillLevels != null ? skillLevels : SkillLevel.values();
+
+        List<TrialSummary> summaries = runTrials(selectedRoutines, selectedSkillLevels, random);
 
         String report = TrialReportFormatter.format(summaries);
 
         System.out.println(report);
 
         writeReportToFile(report);
+
+        return 0;
     }
 
     /**
-     * Runs one trial series per skill level, using the simple riffle shuffle
-     * routine.
+     * Runs every combination of the given routines and skill levels.
      *
-     * @param random a source of randomness, shared across all trial runs
-     * @return one labeled summary per skill level
+     * @param routines the routines to run
+     * @param skillLevels the skill levels to run each routine at
+     * @param random a source of randomness, shared across all runs
+     * @return one labeled summary per routine/skill-level combination
      */
-    private static List<TrialSummary> runTrials(RandomGenerator random) {
+    private List<TrialSummary> runTrials(RoutineCatalog[] routines, SkillLevel[] skillLevels, RandomGenerator random) {
         List<TrialSummary> summaries = new ArrayList<>();
 
-        for (SkillLevel skillLevel : SkillLevel.values()) {
-            RoutineProtocol routine = RoutineFactory.simpleRiffleShuffle(skillLevel);
+        for (RoutineCatalog routine : routines) {
+            for (SkillLevel skillLevel : skillLevels) {
+                RoutineProtocol instance = routine.create(skillLevel);
 
-            List<DeckAnalysis> analyses = TrialRunner.run(routine, TRIALS, random);
-            AggregatedDeckAnalysis aggregated = DeckAnalysisAggregator.aggregate(analyses);
+                List<DeckAnalysis> analyses = TrialRunner.run(instance, trials, random);
+                AggregatedDeckAnalysis aggregated = DeckAnalysisAggregator.aggregate(analyses);
 
-            summaries.add(new TrialSummary("Riffle - " + skillLevel, aggregated));
+                summaries.add(new TrialSummary(instance + " - " + skillLevel, aggregated));
+            }
         }
 
         return summaries;
     }
 
     /**
-     * Writes the formatted report to {@link #REPORT_PATH}, printing a
+     * Writes the formatted report to {@link #outputPath}, printing a
      * message about the outcome either way.
      *
      * @param report the formatted report to write
      */
-    private static void writeReportToFile(String report) {
+    private void writeReportToFile(String report) {
         try {
-            Files.writeString(REPORT_PATH, report);
-            System.out.println("Report written to " + REPORT_PATH.toAbsolutePath());
+            Files.writeString(outputPath, report);
+            System.out.println("Report written to " + outputPath.toAbsolutePath());
         } catch (IOException exception) {
             System.err.println("Failed to write report to file: " + exception.getMessage());
         }
+    }
+
+    public static void main(String[] args) {
+        int exitCode = new CommandLine(new ShuffleLabApp()).execute(args);
+        System.exit(exitCode);
     }
 }
