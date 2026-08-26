@@ -1,6 +1,6 @@
 package se.pbt.shufflelab.factory;
 
-import se.pbt.shufflelab.manipulation.routine.RoutineProtocol;
+import se.pbt.shufflelab.handling.routine.RoutineProtocol;
 import se.pbt.shufflelab.skill.SkillLevel;
 
 import java.util.function.Function;

@@ -1,6 +1,6 @@
 package se.pbt.shufflelab.skill;
 
-import se.pbt.shufflelab.manipulation.shuffle.OverhandShuffle;
+import se.pbt.shufflelab.handling.shuffle.OverhandShuffle;
 
 import java.util.Objects;
 

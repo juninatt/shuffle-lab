@@ -5,7 +5,7 @@ import se.pbt.shufflelab.analysis.AggregatedDeckAnalysis;
 import se.pbt.shufflelab.analysis.DeckAnalysis;
 import se.pbt.shufflelab.analysis.DeckAnalysisAggregator;
 import se.pbt.shufflelab.factory.RoutineFactory;
-import se.pbt.shufflelab.manipulation.routine.RoutineProtocol;
+import se.pbt.shufflelab.handling.routine.RoutineProtocol;
 import se.pbt.shufflelab.report.TrialReportFormatter;
 import se.pbt.shufflelab.skill.SkillLevel;
 import se.pbt.shufflelab.trial.TrialRunner;

@@ -1,8 +1,8 @@
 package se.pbt.shufflelab.skill;
 
-import se.pbt.shufflelab.manipulation.operation.Operation;
-import se.pbt.shufflelab.manipulation.routine.Routine;
-import se.pbt.shufflelab.manipulation.shuffle.Shuffle;
+import se.pbt.shufflelab.handling.operation.Operation;
+import se.pbt.shufflelab.handling.routine.Routine;
+import se.pbt.shufflelab.handling.shuffle.Shuffle;
 
 /**
  * Represents a named level of skill, describing how precisely a person

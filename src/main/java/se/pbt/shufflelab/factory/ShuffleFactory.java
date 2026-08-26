@@ -1,11 +1,11 @@
 package se.pbt.shufflelab.factory;
 
-import se.pbt.shufflelab.manipulation.operation.interleave.HumanInterleaver;
-import se.pbt.shufflelab.manipulation.operation.interleave.InterleaveStart;
-import se.pbt.shufflelab.manipulation.operation.split.BalancedDeckSplitter;
-import se.pbt.shufflelab.manipulation.shuffle.OverhandShuffle;
-import se.pbt.shufflelab.manipulation.shuffle.RiffleShuffle;
-import se.pbt.shufflelab.manipulation.shuffle.Shuffle;
+import se.pbt.shufflelab.handling.operation.interleave.HumanInterleaver;
+import se.pbt.shufflelab.handling.operation.interleave.InterleaveStart;
+import se.pbt.shufflelab.handling.operation.split.BalancedDeckSplitter;
+import se.pbt.shufflelab.handling.shuffle.OverhandShuffle;
+import se.pbt.shufflelab.handling.shuffle.RiffleShuffle;
+import se.pbt.shufflelab.handling.shuffle.Shuffle;
 import se.pbt.shufflelab.skill.SkillLevel;
 import se.pbt.shufflelab.skill.SkillProfile;
 
