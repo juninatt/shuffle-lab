@@ -3,6 +3,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### ShuffleLab generated output ###
+shuffle-lab-report.txt
+
 ### IntelliJ IDEA ###
 .idea/
 
