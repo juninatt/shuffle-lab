@@ -73,6 +73,7 @@ report is written, and `--help` to see all available options.
 - Skill-based shuffle configuration, including custom skill profiles
 - Configurable shuffle architecture based on operations, shuffles, and routines
 - A catalog of predefined shuffle routines, discoverable and run programmatically
+- An ideal random shuffle baseline (Fisher–Yates), for measuring how close a technique gets to true randomness
 - Deck shuffle analysis: card displacement and preserved-order measurement
 - Aggregated statistics across repeated trials
 - Plain-text comparison reporting across multiple trial runs

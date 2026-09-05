@@ -10,6 +10,7 @@ import se.pbt.shufflelab.TestRandoms;
 import se.pbt.shufflelab.handling.operation.cut.DeckCutter;
 import se.pbt.shufflelab.handling.operation.split.BalancedDeckSplitter;
 import se.pbt.shufflelab.handling.routine.RoutineProtocol;
+import se.pbt.shufflelab.handling.shuffle.FisherYatesShuffle;
 import se.pbt.shufflelab.handling.shuffle.PileShuffle;
 import se.pbt.shufflelab.skill.SkillLevel;
 import se.pbt.shufflelab.skill.SkillProfile;
@@ -35,7 +36,8 @@ class RoutineFactoryTest {
                 Arguments.of("repeated overhand shuffle", (Function<SkillLevel, RoutineProtocol>) RoutineFactory::repeatedOverhandShuffle),
                 Arguments.of("standard riffle shuffle", (Function<SkillLevel, RoutineProtocol>) RoutineFactory::standardRiffleShuffle),
                 Arguments.of("casual shuffle sequence", (Function<SkillLevel, RoutineProtocol>) RoutineFactory::casualShuffleSequence),
-                Arguments.of("pile shuffle then riffle", (Function<SkillLevel, RoutineProtocol>) RoutineFactory::pileShuffleThenRiffle)
+                Arguments.of("pile shuffle then riffle", (Function<SkillLevel, RoutineProtocol>) RoutineFactory::pileShuffleThenRiffle),
+                Arguments.of("ideal random shuffle", (Function<SkillLevel, RoutineProtocol>) RoutineFactory::idealRandomShuffle)
         );
     }
 
@@ -49,7 +51,8 @@ class RoutineFactoryTest {
                 Arguments.of((Function<SkillLevel, RoutineProtocol>) RoutineFactory::repeatedOverhandShuffle, "Repeated overhand shuffle"),
                 Arguments.of((Function<SkillLevel, RoutineProtocol>) RoutineFactory::standardRiffleShuffle, "Standard riffle shuffle"),
                 Arguments.of((Function<SkillLevel, RoutineProtocol>) RoutineFactory::casualShuffleSequence, "Casual shuffle sequence"),
-                Arguments.of((Function<SkillLevel, RoutineProtocol>) RoutineFactory::pileShuffleThenRiffle, "Pile shuffle then riffle")
+                Arguments.of((Function<SkillLevel, RoutineProtocol>) RoutineFactory::pileShuffleThenRiffle, "Pile shuffle then riffle"),
+                Arguments.of((Function<SkillLevel, RoutineProtocol>) RoutineFactory::idealRandomShuffle, "Ideal random shuffle (baseline)")
         );
     }
 
@@ -234,6 +237,27 @@ class RoutineFactoryTest {
                     .as("The routine should be equivalent to a pile shuffle, a riffle shuffle, then a deck cut")
                     .isEqualTo(expectedDeck);
         }
+
+        @Test
+        @DisplayName("An ideal random shuffle routine should apply a Fisher-Yates shuffle")
+        void idealRandomShuffleRoutineShouldApplyFisherYatesShuffle() {
+            var routineDeck = DeckFactory.standardDeck();
+            var expectedDeck = DeckFactory.standardDeck();
+
+            RoutineProtocol routine = RoutineFactory.idealRandomShuffle(SkillLevel.EXPERT);
+
+            var routineRandom = TestRandoms.seededRandom(42);
+            var expectedRandom = TestRandoms.seededRandom(42);
+
+            routine.execute(routineDeck, routineRandom);
+
+            new FisherYatesShuffle()
+                    .shuffle(expectedDeck, expectedRandom);
+
+            assertThat(routineDeck)
+                    .as("The ideal random shuffle routine should be equivalent to a single Fisher-Yates shuffle")
+                    .isEqualTo(expectedDeck);
+        }
     }
 
     @Nested
@@ -271,7 +295,8 @@ class RoutineFactoryTest {
                     RoutineFactory.repeatedOverhandShuffle(SkillLevel.EXPERT).toString(),
                     RoutineFactory.standardRiffleShuffle(SkillLevel.EXPERT).toString(),
                     RoutineFactory.casualShuffleSequence(SkillLevel.EXPERT).toString(),
-                    RoutineFactory.pileShuffleThenRiffle(SkillLevel.EXPERT).toString()
+                    RoutineFactory.pileShuffleThenRiffle(SkillLevel.EXPERT).toString(),
+                    RoutineFactory.idealRandomShuffle(SkillLevel.EXPERT).toString()
             );
 
             assertThat(names)

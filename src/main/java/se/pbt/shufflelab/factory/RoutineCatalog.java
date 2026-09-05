@@ -42,7 +42,12 @@ public enum RoutineCatalog {
     /**
      * @see RoutineFactory#pileShuffleThenRiffle(SkillLevel)
      */
-    PILE_SHUFFLE_THEN_RIFFLE(RoutineFactory::pileShuffleThenRiffle);
+    PILE_SHUFFLE_THEN_RIFFLE(RoutineFactory::pileShuffleThenRiffle),
+
+    /**
+     * @see RoutineFactory#idealRandomShuffle(SkillLevel)
+     */
+    IDEAL_RANDOM_SHUFFLE(RoutineFactory::idealRandomShuffle);
 
     private final Function<SkillLevel, RoutineProtocol> factory;
 

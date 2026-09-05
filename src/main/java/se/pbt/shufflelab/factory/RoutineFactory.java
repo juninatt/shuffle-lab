@@ -4,6 +4,7 @@ import se.pbt.shufflelab.handling.operation.cut.DeckCutter;
 import se.pbt.shufflelab.handling.operation.split.BalancedDeckSplitter;
 import se.pbt.shufflelab.handling.routine.Routine;
 import se.pbt.shufflelab.handling.routine.RoutineProtocol;
+import se.pbt.shufflelab.handling.shuffle.FisherYatesShuffle;
 import se.pbt.shufflelab.handling.shuffle.PileShuffle;
 import se.pbt.shufflelab.handling.shuffle.Shuffle;
 import se.pbt.shufflelab.skill.SkillLevel;
@@ -210,5 +211,29 @@ public final class RoutineFactory {
         operations.add(deckCutter::cut);
 
         return new Routine("Pile shuffle then riffle", operations);
+    }
+
+    /**
+     * Creates the ideal random shuffle baseline.
+     *
+     * <p>Produces a mathematically uniform random permutation of the deck
+     * using the Fisher–Yates algorithm, rather than modelling any real-world
+     * shuffling technique. This gives every other routine a fixed reference
+     * point to be measured against, instead of only being ranked against
+     * each other.</p>
+     *
+     * @param skillLevel accepted for signature parity with every other
+     *                    catalog entry, but otherwise ignored — this routine
+     *                    is not affected by simulated performer skill
+     * @return the ideal random shuffle baseline
+     * @throws NullPointerException if {@code skillLevel} is {@code null}
+     */
+    public static RoutineProtocol idealRandomShuffle(SkillLevel skillLevel) {
+        Objects.requireNonNull(skillLevel, "skillLevel must not be null");
+
+        return new Routine(
+                "Ideal random shuffle (baseline)",
+                List.of(new FisherYatesShuffle())
+        );
     }
 }
