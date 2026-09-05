@@ -46,18 +46,17 @@ public final class TrialReportFormatter {
 
         appendOverview(report, results);
 
-        report.append("== Displacement ==").append(System.lineSeparator()).append(System.lineSeparator());
-        appendField(report, "unmovedCards", results, result -> result.analysis().displacement().unmovedCards());
-        appendField(report, "totalDisplacement", results, result -> result.analysis().displacement().totalDisplacement());
-        appendField(report, "maximumDisplacement", results, result -> result.analysis().displacement().maximumDisplacement());
+        String currentSection = null;
 
-        report.append("== Preserved order ==").append(System.lineSeparator()).append(System.lineSeparator());
-        appendField(report, "preservedPairs", results, result -> result.analysis().preservedOrder().preservedPairs());
-        appendField(report, "preservedSequences", results, result -> result.analysis().preservedOrder().preservedSequences());
-        appendField(report, "cardsInPairs", results, result -> result.analysis().preservedOrder().cardsInPairs());
-        appendField(report, "cardsInSequences", results, result -> result.analysis().preservedOrder().cardsInSequences());
-        appendField(report, "longestSequence", results, result -> result.analysis().preservedOrder().longestSequence());
-        appendField(report, "preservedCardPercentage", results, result -> result.analysis().preservedOrder().preservedCardPercentage());
+        for (ReportFields.Field field : ReportFields.ALL) {
+            if (!field.section().equals(currentSection)) {
+                currentSection = field.section();
+                report.append("== ").append(currentSection).append(" ==")
+                        .append(System.lineSeparator()).append(System.lineSeparator());
+            }
+
+            appendField(report, field.name(), results, field.statisticsOf());
+        }
 
         return report.toString();
     }

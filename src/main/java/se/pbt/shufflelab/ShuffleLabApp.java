@@ -8,7 +8,9 @@ import se.pbt.shufflelab.analysis.DeckAnalysis;
 import se.pbt.shufflelab.analysis.DeckAnalysisAggregator;
 import se.pbt.shufflelab.factory.RoutineCatalog;
 import se.pbt.shufflelab.handling.routine.RoutineProtocol;
+import se.pbt.shufflelab.report.TrialReportCsvFormatter;
 import se.pbt.shufflelab.report.TrialReportFormatter;
+import se.pbt.shufflelab.report.TrialReportJsonFormatter;
 import se.pbt.shufflelab.skill.SkillLevel;
 import se.pbt.shufflelab.trial.TrialRunner;
 import se.pbt.shufflelab.trial.TrialSummary;
@@ -66,6 +68,18 @@ public class ShuffleLabApp implements Callable<Integer> {
     )
     private Path outputPath;
 
+    @Option(
+            names = {"--csv"},
+            description = "If given, also write a CSV export of the results to this path"
+    )
+    private Path csvOutputPath;
+
+    @Option(
+            names = {"--json"},
+            description = "If given, also write a JSON export of the results to this path"
+    )
+    private Path jsonOutputPath;
+
     @Override
     public Integer call() {
         RandomGenerator random = new Random();
@@ -79,7 +93,15 @@ public class ShuffleLabApp implements Callable<Integer> {
 
         System.out.println(report);
 
-        writeReportToFile(report);
+        writeToFile(report, outputPath);
+
+        if (csvOutputPath != null) {
+            writeToFile(TrialReportCsvFormatter.format(summaries), csvOutputPath);
+        }
+
+        if (jsonOutputPath != null) {
+            writeToFile(TrialReportJsonFormatter.format(summaries), jsonOutputPath);
+        }
 
         return 0;
     }
@@ -110,15 +132,16 @@ public class ShuffleLabApp implements Callable<Integer> {
     }
 
     /**
-     * Writes the formatted report to {@link #outputPath}, printing a
-     * message about the outcome either way.
+     * Writes the given report content to the given path, printing a message
+     * about the outcome either way.
      *
-     * @param report the formatted report to write
+     * @param content the formatted report content to write
+     * @param path the path to write the content to
      */
-    private void writeReportToFile(String report) {
+    private void writeToFile(String content, Path path) {
         try {
-            Files.writeString(outputPath, report);
-            System.out.println("Report written to " + outputPath.toAbsolutePath());
+            Files.writeString(path, content);
+            System.out.println("Report written to " + path.toAbsolutePath());
         } catch (IOException exception) {
             System.err.println("Failed to write report to file: " + exception.getMessage());
         }

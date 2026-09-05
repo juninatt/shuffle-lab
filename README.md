@@ -55,7 +55,9 @@ mvn compile exec:java -Dexec.args="--routine STANDARD_RIFFLE_SHUFFLE --skill EXP
 ```
 
 Omit `--routine` or `--skill` to run every predefined combination. Use `--out` to choose where the resulting
-report is written, and `--help` to see all available options.
+plain-text report is written. Add `--csv <path>` and/or `--json <path>` to also export the same results in a
+format meant for further processing, such as a spreadsheet or a plotting tool, rather than manual reading. Use
+`--help` to see all available options.
 
 ## Features
 
@@ -77,7 +79,7 @@ report is written, and `--help` to see all available options.
 - Faro- and Mongean-shuffle-then-riffle routines, pairing each structured shuffle with a riffle and cut to actually randomise the deck
 - Deck shuffle analysis: card displacement and preserved-order measurement
 - Aggregated statistics across repeated trials
-- Plain-text comparison reporting across multiple trial runs
+- Plain-text, CSV, and JSON comparison reporting across multiple trial runs
 - A command-line application for running and comparing routines and skill levels
 - Validation of shuffle constraints
 - Comprehensive unit tests using JUnit 5 and AssertJ
