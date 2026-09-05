@@ -36,7 +36,7 @@ class RoutineCatalogTest {
         void shouldListEveryRoutineDefinedInFactory() {
             assertThat(RoutineCatalog.values())
                     .as("Adding a routine to RoutineFactory should add a matching catalog entry")
-                    .hasSize(6);
+                    .hasSize(8);
         }
     }
 

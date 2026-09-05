@@ -74,6 +74,7 @@ report is written, and `--help` to see all available options.
 - Configurable shuffle architecture based on operations, shuffles, and routines
 - A catalog of predefined shuffle routines, discoverable and run programmatically
 - An ideal random shuffle baseline (Fisher–Yates), for measuring how close a technique gets to true randomness
+- Faro- and Mongean-shuffle-then-riffle routines, pairing each structured shuffle with a riffle and cut to actually randomise the deck
 - Deck shuffle analysis: card displacement and preserved-order measurement
 - Aggregated statistics across repeated trials
 - Plain-text comparison reporting across multiple trial runs
@@ -85,5 +86,4 @@ report is written, and `--help` to see all available options.
 
 - Additional deck splitters and cutting strategies
 - Additional shuffle techniques
-- Shuffle routines using Faro and Mongean shuffles
 - Performance benchmarking

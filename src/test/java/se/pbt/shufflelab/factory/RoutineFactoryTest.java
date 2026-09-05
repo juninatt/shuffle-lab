@@ -10,7 +10,10 @@ import se.pbt.shufflelab.TestRandoms;
 import se.pbt.shufflelab.handling.operation.cut.DeckCutter;
 import se.pbt.shufflelab.handling.operation.split.BalancedDeckSplitter;
 import se.pbt.shufflelab.handling.routine.RoutineProtocol;
+import se.pbt.shufflelab.handling.shuffle.FaroShuffle;
+import se.pbt.shufflelab.handling.shuffle.FaroType;
 import se.pbt.shufflelab.handling.shuffle.FisherYatesShuffle;
+import se.pbt.shufflelab.handling.shuffle.MongeanShuffle;
 import se.pbt.shufflelab.handling.shuffle.PileShuffle;
 import se.pbt.shufflelab.skill.SkillLevel;
 import se.pbt.shufflelab.skill.SkillProfile;
@@ -37,7 +40,9 @@ class RoutineFactoryTest {
                 Arguments.of("standard riffle shuffle", (Function<SkillLevel, RoutineProtocol>) RoutineFactory::standardRiffleShuffle),
                 Arguments.of("casual shuffle sequence", (Function<SkillLevel, RoutineProtocol>) RoutineFactory::casualShuffleSequence),
                 Arguments.of("pile shuffle then riffle", (Function<SkillLevel, RoutineProtocol>) RoutineFactory::pileShuffleThenRiffle),
-                Arguments.of("ideal random shuffle", (Function<SkillLevel, RoutineProtocol>) RoutineFactory::idealRandomShuffle)
+                Arguments.of("ideal random shuffle", (Function<SkillLevel, RoutineProtocol>) RoutineFactory::idealRandomShuffle),
+                Arguments.of("faro shuffle then riffle", (Function<SkillLevel, RoutineProtocol>) RoutineFactory::faroShuffleThenRiffle),
+                Arguments.of("mongean shuffle then riffle", (Function<SkillLevel, RoutineProtocol>) RoutineFactory::mongeanShuffleThenRiffle)
         );
     }
 
@@ -52,7 +57,9 @@ class RoutineFactoryTest {
                 Arguments.of((Function<SkillLevel, RoutineProtocol>) RoutineFactory::standardRiffleShuffle, "Standard riffle shuffle"),
                 Arguments.of((Function<SkillLevel, RoutineProtocol>) RoutineFactory::casualShuffleSequence, "Casual shuffle sequence"),
                 Arguments.of((Function<SkillLevel, RoutineProtocol>) RoutineFactory::pileShuffleThenRiffle, "Pile shuffle then riffle"),
-                Arguments.of((Function<SkillLevel, RoutineProtocol>) RoutineFactory::idealRandomShuffle, "Ideal random shuffle (baseline)")
+                Arguments.of((Function<SkillLevel, RoutineProtocol>) RoutineFactory::idealRandomShuffle, "Ideal random shuffle (baseline)"),
+                Arguments.of((Function<SkillLevel, RoutineProtocol>) RoutineFactory::faroShuffleThenRiffle, "Faro shuffle then riffle"),
+                Arguments.of((Function<SkillLevel, RoutineProtocol>) RoutineFactory::mongeanShuffleThenRiffle, "Mongean shuffle then riffle")
         );
     }
 
@@ -258,6 +265,66 @@ class RoutineFactoryTest {
                     .as("The ideal random shuffle routine should be equivalent to a single Fisher-Yates shuffle")
                     .isEqualTo(expectedDeck);
         }
+
+        @Test
+        @DisplayName("A Faro-shuffle-then-riffle routine should apply the Faro shuffle, then riffle shuffle, then deck cut")
+        void faroShuffleThenRiffleRoutineShouldApplyFaroThenRiffleThenCut() {
+            var routineDeck = DeckFactory.standardDeck();
+            var expectedDeck = DeckFactory.standardDeck();
+
+            SkillLevel skillLevel = SkillLevel.INTERMEDIATE;
+            SkillProfile profile = SkillProfile.withLevel(skillLevel);
+
+            RoutineProtocol routine = RoutineFactory.faroShuffleThenRiffle(skillLevel);
+
+            var routineRandom = TestRandoms.seededRandom(42);
+            var expectedRandom = TestRandoms.seededRandom(42);
+
+            routine.execute(routineDeck, routineRandom);
+
+            new FaroShuffle(FaroType.OUT)
+                    .shuffle(expectedDeck, expectedRandom);
+
+            ShuffleFactory.riffle(skillLevel)
+                    .shuffle(expectedDeck, expectedRandom);
+
+            new DeckCutter(new BalancedDeckSplitter(profile.maxSplitDeviation()))
+                    .cut(expectedDeck, expectedRandom);
+
+            assertThat(routineDeck)
+                    .as("The routine should be equivalent to a Faro shuffle, a riffle shuffle, then a deck cut")
+                    .isEqualTo(expectedDeck);
+        }
+
+        @Test
+        @DisplayName("A Mongean-shuffle-then-riffle routine should apply the Mongean shuffle, then riffle shuffle, then deck cut")
+        void mongeanShuffleThenRiffleRoutineShouldApplyMongeanThenRiffleThenCut() {
+            var routineDeck = DeckFactory.standardDeck();
+            var expectedDeck = DeckFactory.standardDeck();
+
+            SkillLevel skillLevel = SkillLevel.INTERMEDIATE;
+            SkillProfile profile = SkillProfile.withLevel(skillLevel);
+
+            RoutineProtocol routine = RoutineFactory.mongeanShuffleThenRiffle(skillLevel);
+
+            var routineRandom = TestRandoms.seededRandom(42);
+            var expectedRandom = TestRandoms.seededRandom(42);
+
+            routine.execute(routineDeck, routineRandom);
+
+            new MongeanShuffle()
+                    .shuffle(expectedDeck, expectedRandom);
+
+            ShuffleFactory.riffle(skillLevel)
+                    .shuffle(expectedDeck, expectedRandom);
+
+            new DeckCutter(new BalancedDeckSplitter(profile.maxSplitDeviation()))
+                    .cut(expectedDeck, expectedRandom);
+
+            assertThat(routineDeck)
+                    .as("The routine should be equivalent to a Mongean shuffle, a riffle shuffle, then a deck cut")
+                    .isEqualTo(expectedDeck);
+        }
     }
 
     @Nested
@@ -296,7 +363,9 @@ class RoutineFactoryTest {
                     RoutineFactory.standardRiffleShuffle(SkillLevel.EXPERT).toString(),
                     RoutineFactory.casualShuffleSequence(SkillLevel.EXPERT).toString(),
                     RoutineFactory.pileShuffleThenRiffle(SkillLevel.EXPERT).toString(),
-                    RoutineFactory.idealRandomShuffle(SkillLevel.EXPERT).toString()
+                    RoutineFactory.idealRandomShuffle(SkillLevel.EXPERT).toString(),
+                    RoutineFactory.faroShuffleThenRiffle(SkillLevel.EXPERT).toString(),
+                    RoutineFactory.mongeanShuffleThenRiffle(SkillLevel.EXPERT).toString()
             );
 
             assertThat(names)

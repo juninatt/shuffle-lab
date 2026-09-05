@@ -4,7 +4,10 @@ import se.pbt.shufflelab.handling.operation.cut.DeckCutter;
 import se.pbt.shufflelab.handling.operation.split.BalancedDeckSplitter;
 import se.pbt.shufflelab.handling.routine.Routine;
 import se.pbt.shufflelab.handling.routine.RoutineProtocol;
+import se.pbt.shufflelab.handling.shuffle.FaroShuffle;
+import se.pbt.shufflelab.handling.shuffle.FaroType;
 import se.pbt.shufflelab.handling.shuffle.FisherYatesShuffle;
+import se.pbt.shufflelab.handling.shuffle.MongeanShuffle;
 import se.pbt.shufflelab.handling.shuffle.PileShuffle;
 import se.pbt.shufflelab.handling.shuffle.Shuffle;
 import se.pbt.shufflelab.skill.SkillLevel;
@@ -235,5 +238,72 @@ public final class RoutineFactory {
                 "Ideal random shuffle (baseline)",
                 List.of(new FisherYatesShuffle())
         );
+    }
+
+    /**
+     * Creates a Faro shuffle followed by a riffle shuffle.
+     *
+     * <p>A Faro shuffle alone rearranges a deck into a highly structured
+     * order — repeated often enough, it even cycles back to the original
+     * order — so it does not introduce genuine randomness by itself. This
+     * routine performs one out-Faro shuffle, then follows up with one
+     * human-style riffle shuffle and a final cut to actually randomise the
+     * result. The riffle and the cut use the {@link SkillProfile} associated
+     * with the supplied {@link SkillLevel}; the Faro shuffle itself is
+     * deterministic and unaffected by skill.</p>
+     *
+     * @param skillLevel the simulated performer skill level
+     * @return a Faro shuffle followed by a riffle shuffle
+     * @throws NullPointerException if {@code skillLevel} is {@code null}
+     */
+    public static RoutineProtocol faroShuffleThenRiffle(SkillLevel skillLevel) {
+        Objects.requireNonNull(skillLevel, "skillLevel must not be null");
+
+        SkillProfile profile = SkillProfile.withLevel(skillLevel);
+
+        List<Shuffle> operations = new ArrayList<>();
+        operations.add(new FaroShuffle(FaroType.OUT));
+        operations.add(ShuffleFactory.riffle(skillLevel));
+
+        DeckCutter deckCutter = new DeckCutter(
+                new BalancedDeckSplitter(profile.maxSplitDeviation())
+        );
+
+        operations.add(deckCutter::cut);
+
+        return new Routine("Faro shuffle then riffle", operations);
+    }
+
+    /**
+     * Creates a Mongean shuffle followed by a riffle shuffle.
+     *
+     * <p>A Mongean shuffle alone rearranges a deck into a highly structured,
+     * fully reversed-and-interleaved order — it does not introduce genuine
+     * randomness by itself. This routine performs one Mongean shuffle, then
+     * follows up with one human-style riffle shuffle and a final cut to
+     * actually randomise the result. The riffle and the cut use the
+     * {@link SkillProfile} associated with the supplied {@link SkillLevel};
+     * the Mongean shuffle itself is deterministic and unaffected by skill.</p>
+     *
+     * @param skillLevel the simulated performer skill level
+     * @return a Mongean shuffle followed by a riffle shuffle
+     * @throws NullPointerException if {@code skillLevel} is {@code null}
+     */
+    public static RoutineProtocol mongeanShuffleThenRiffle(SkillLevel skillLevel) {
+        Objects.requireNonNull(skillLevel, "skillLevel must not be null");
+
+        SkillProfile profile = SkillProfile.withLevel(skillLevel);
+
+        List<Shuffle> operations = new ArrayList<>();
+        operations.add(new MongeanShuffle());
+        operations.add(ShuffleFactory.riffle(skillLevel));
+
+        DeckCutter deckCutter = new DeckCutter(
+                new BalancedDeckSplitter(profile.maxSplitDeviation())
+        );
+
+        operations.add(deckCutter::cut);
+
+        return new Routine("Mongean shuffle then riffle", operations);
     }
 }
