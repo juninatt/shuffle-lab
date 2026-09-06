@@ -10,6 +10,7 @@ import se.pbt.shufflelab.factory.RoutineCatalog;
 import se.pbt.shufflelab.handling.routine.RoutineProtocol;
 import se.pbt.shufflelab.report.TrialReportCsvFormatter;
 import se.pbt.shufflelab.report.TrialReportFormatter;
+import se.pbt.shufflelab.report.TrialReportHtmlFormatter;
 import se.pbt.shufflelab.report.TrialReportJsonFormatter;
 import se.pbt.shufflelab.skill.SkillLevel;
 import se.pbt.shufflelab.trial.TrialKind;
@@ -21,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.random.RandomGenerator;
@@ -81,6 +83,18 @@ public class ShuffleLabApp implements Callable<Integer> {
     )
     private Path jsonOutputPath;
 
+    @Option(
+            names = {"--html"},
+            description = "If given, also write an interactive HTML report of the results to this path"
+    )
+    private Path htmlOutputPath;
+
+    @Option(
+            names = {"--open"},
+            description = "Open the generated HTML report (--html) in the default browser"
+    )
+    private boolean openInBrowser;
+
     @Override
     public Integer call() {
         RandomGenerator random = new Random();
@@ -102,6 +116,16 @@ public class ShuffleLabApp implements Callable<Integer> {
 
         if (jsonOutputPath != null) {
             writeToFile(TrialReportJsonFormatter.format(summaries), jsonOutputPath);
+        }
+
+        if (htmlOutputPath != null) {
+            writeToFile(TrialReportHtmlFormatter.format(summaries), htmlOutputPath);
+
+            if (openInBrowser) {
+                openInBrowser(htmlOutputPath);
+            }
+        } else if (openInBrowser) {
+            System.err.println("--open has no effect without --html");
         }
 
         return 0;
@@ -147,6 +171,33 @@ public class ShuffleLabApp implements Callable<Integer> {
             System.out.println("Report written to " + path.toAbsolutePath());
         } catch (IOException exception) {
             System.err.println("Failed to write report to file: " + exception.getMessage());
+        }
+    }
+
+    /**
+     * Opens the given path in the platform's default browser.
+     *
+     * <p>This shells out to the platform's own "open this file" command
+     * rather than using {@link java.awt.Desktop}, since {@code Desktop.browse}
+     * has been observed to report success without actually launching a
+     * browser when run through this project's Maven-based launcher.</p>
+     *
+     * @param path the path to open
+     */
+    private void openInBrowser(Path path) {
+        String absolutePath = path.toAbsolutePath().toString();
+        String os = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
+
+        ProcessBuilder processBuilder = os.contains("win")
+                ? new ProcessBuilder("cmd", "/c", "start", "\"\"", absolutePath)
+                : os.contains("mac")
+                        ? new ProcessBuilder("open", absolutePath)
+                        : new ProcessBuilder("xdg-open", absolutePath);
+
+        try {
+            processBuilder.start();
+        } catch (IOException exception) {
+            System.err.println("Failed to open report in browser: " + exception.getMessage());
         }
     }
 

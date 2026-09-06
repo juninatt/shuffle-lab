@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shuffle Ledger</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #eef1ec;
+    --surface: #fcfcfb;
+    --surface-alt: #f3f5f0;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #898781;
+    --line: #e1e0d9;
+    --accent: #2a78d6;
+    --ref: #8f8f89;
+    --border: rgba(11,11,11,0.10);
+    --focus: #2a78d6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #12130f;
+      --surface: #1a1a19;
+      --surface-alt: #202019;
+      --text-primary: #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted: #898781;
+      --line: #2c2c2a;
+      --accent: #3987e5;
+      --ref: #6f6f68;
+      --border: rgba(255,255,255,0.10);
+      --focus: #3987e5;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #12130f;
+    --surface: #1a1a19;
+    --surface-alt: #202019;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --line: #2c2c2a;
+    --accent: #3987e5;
+    --ref: #6f6f68;
+    --border: rgba(255,255,255,0.10);
+    --focus: #3987e5;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .masthead { display: flex; flex-direction: column; gap: 10px; }
+
+  .eyebrow {
+    margin: 0;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0;
+    font-family: "Big Shoulders Display", "IBM Plex Sans", sans-serif;
+    font-weight: 800;
+    font-size: 52px;
+    line-height: 0.95;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+
+  .dek {
+    margin: 0;
+    max-width: 62ch;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+  }
+
+  .filter-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .controls {
+    display: inline-flex;
+    padding: 4px;
+    gap: 2px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+
+  .controls button {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 7px;
+    cursor: pointer;
+  }
+
+  .controls button:hover { color: var(--text-primary); }
+
+  .controls button.active {
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  .controls button:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .field { display: inline-flex; align-items: center; gap: 8px; }
+
+  .field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  select {
+    appearance: none;
+    background: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 32px 9px 12px;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6"><path d="M0 0l5 6 5-6z" fill="%23898781"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+
+  select:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 28px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .chart-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+  }
+
+  .chart-head h2 {
+    margin: 0;
+    font-family: "Big Shoulders Display", sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 0.01em;
+  }
+
+  .chart-legend {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .chart-legend .key { display: inline-flex; align-items: center; gap: 6px; }
+  .chart-legend .key.ref-key[hidden] { display: none; }
+
+  .metric-desc {
+    margin: -8px 0 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    max-width: 68ch;
+  }
+
+  .metric-desc b { color: var(--text-primary); font-weight: 600; }
+
+  .note {
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--text-muted);
+  }
+
+  .swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    display: inline-block;
+  }
+
+  .swatch.data { background: var(--accent); }
+  .swatch.ref { background: var(--ref); }
+
+  .plot {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 4px;
+  }
+
+  .gridlines { position: absolute; inset: 0; pointer-events: none; }
+
+  .gridlines i {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--line);
+  }
+
+  .bar-row {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    align-items: center;
+    gap: 14px;
+    padding: 4px 0;
+    border-radius: 6px;
+  }
+
+  .bar-row:hover, .bar-row:focus-visible { background: var(--surface-alt); }
+  .bar-row:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .bar-label {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-align: right;
+    line-height: 1.25;
+  }
+
+  .bar-label .tag {
+    display: block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .bar-track { position: relative; height: 22px; margin-right: 64px; }
+
+  .bar-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 0 4px 4px 0;
+    background: var(--accent);
+    transition: width 0.35s ease, background 0.2s ease;
+  }
+
+  .bar-fill.is-ref { background: var(--ref); }
+
+  .bar-row:hover .bar-fill,
+  .bar-row:focus-visible .bar-fill {
+    box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--text-secondary);
+  }
+
+  .bar-value {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    font-family: "IBM Plex Mono", monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+
+  .axis { position: relative; height: 18px; margin-left: 214px; margin-right: 64px; }
+
+  .axis span {
+    position: absolute;
+    transform: translateX(-50%);
+    font-family: "IBM Plex Mono", monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .axis span:first-child { transform: translateX(0); }
+  .axis span:last-child { transform: translateX(-100%); }
+
+  .tooltip {
+    position: fixed;
+    z-index: 20;
+    background: var(--text-primary);
+    color: var(--surface);
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 10px 12px;
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.1s ease;
+    max-width: 240px;
+  }
+
+  .tooltip.visible { opacity: 1; }
+  .tooltip b { font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; }
+  .tooltip .row { display: flex; justify-content: space-between; gap: 12px; }
+  .tooltip .desc { opacity: 0.8; font-style: italic; margin: 2px 0 8px; max-width: 220px; }
+
+  .callout {
+    border-left: 3px solid var(--ref);
+    padding: 4px 0 4px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .callout h3 {
+    margin: 0;
+    font-family: "Big Shoulders Display", sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: 0.01em;
+  }
+
+  .callout p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 68ch;
+  }
+
+  details.table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 4px 28px;
+  }
+
+  details.table-wrap summary {
+    cursor: pointer;
+    padding: 16px 0;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-primary);
+    list-style: none;
+  }
+
+  details.table-wrap summary::-webkit-details-marker { display: none; }
+
+  details.table-wrap summary::before {
+    content: "▸";
+    display: inline-block;
+    margin-right: 8px;
+    color: var(--text-muted);
+    transition: transform 0.15s ease;
+  }
+
+  details.table-wrap[open] summary::before { transform: rotate(90deg); }
+
+  .table-scroll { overflow-x: auto; padding-bottom: 20px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+  th, td {
+    text-align: right;
+    padding: 8px 10px;
+    white-space: nowrap;
+    font-family: "IBM Plex Mono", monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  th:first-child, td:first-child { text-align: left; font-family: "IBM Plex Sans", sans-serif; }
+
+  th:nth-child(2), td:nth-child(2) {
+    text-align: left;
+    font-family: "IBM Plex Sans", sans-serif;
+    white-space: normal;
+    min-width: 260px;
+    max-width: 360px;
+    color: var(--text-secondary);
+  }
+
+  thead th {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--line);
+  }
+
+  tbody td { border-bottom: 1px solid var(--line); color: var(--text-primary); }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr.is-ref td:first-child { color: var(--text-secondary); font-style: italic; }
+
+  .prov {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 620px) {
+    h1 { font-size: 38px; }
+    .bar-row { grid-template-columns: 130px 1fr; }
+    .bar-label { font-size: 12px; }
+    .axis { margin-left: 144px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="masthead">
+    <p class="eyebrow">shuffle-lab &middot; trial comparison</p>
+    <h1>Shuffle Ledger</h1>
+    <p class="dek" id="dek"></p>
+  </header>
+
+  <div class="filter-row">
+    <div class="controls" id="kind-tabs" role="group" aria-label="Shuffle or routine">
+      <button data-kind="ROUTINE" class="active">Routines</button>
+      <button data-kind="SHUFFLE">Shuffles</button>
+    </div>
+
+    <div class="controls" id="skill-tabs" role="group" aria-label="Simulated performer skill">
+      <button data-skill="NOVICE">Novice</button>
+      <button data-skill="INTERMEDIATE">Intermediate</button>
+      <button data-skill="EXPERT" class="active">Expert</button>
+    </div>
+
+    <div class="field">
+      <label for="metric-select">Measure</label>
+      <select id="metric-select"></select>
+    </div>
+  </div>
+
+  <section class="chart-card">
+    <div class="chart-head">
+      <h2 id="chart-title"></h2>
+      <div class="chart-legend">
+        <span class="key"><span class="swatch data"></span>Technique</span>
+        <span class="key ref-key" id="ref-key"><span class="swatch ref"></span>Ideal random (reference)</span>
+      </div>
+    </div>
+
+    <p class="metric-desc" id="metric-desc"></p>
+    <p class="note" id="note" hidden>Aim for the reference bar — landing under it or over it both signal leftover structure, not extra randomness.</p>
+
+    <div class="plot" id="plot">
+      <div class="gridlines" id="gridlines"></div>
+    </div>
+
+    <div class="axis" id="axis"></div>
+  </section>
+
+  <aside class="callout" id="callout" hidden>
+    <h3>Reading the bars below the reference</h3>
+    <p id="callout-text"></p>
+  </aside>
+
+  <details class="table-wrap">
+    <summary>Show full data table (all statistics, current measure)</summary>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Label</th>
+            <th>Description</th>
+            <th>Mean</th>
+            <th>Median</th>
+            <th>Min</th>
+            <th>Max</th>
+            <th>Standard Deviation</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </details>
+
+  <footer class="prov" id="prov"></footer>
+
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+  // Replaced at generation time by se.pbt.shufflelab.report.TrialReportHtmlFormatter with the
+  // exact rows produced by TrialReportJsonFormatter for whatever routines/skill levels were run.
+  const ROWS = /*__ROWS_JSON__*/[];
+
+  const REF_PREFIXES = ["Ideal random shuffle", "Fisher"];
+  function isReference(label) { return REF_PREFIXES.some(prefix => label.indexOf(prefix) === 0); }
+
+  const METRICS = [
+    { key: "unmovedCards", label: "Unmoved cards", unit: "cards", section: "Displacement",
+      describe: r => r
+        ? `How many cards land back in the <b>exact position</b> they started in. True randomness leaves about <b>${r} cards</b> unmoved on average here — that's a property of randomness itself, not a shuffling failure, so 0 is not the goal.`
+        : `How many cards land back in the <b>exact position</b> they started in. A true random shuffle leaves about 1 card unmoved on average, regardless of deck size — 0 is not the goal.` },
+    { key: "totalDisplacement", label: "Total displacement", unit: "position-units", section: "Displacement",
+      describe: r => r
+        ? `The summed distance every card travelled from its starting position. A mechanically reversed deck would also score high despite being fully predictable, so <b>bigger isn't automatically better</b> — true randomness lands close to <b>${r}</b>.`
+        : `The summed distance every card travelled from its starting position. A mechanically reversed deck would also score high despite being fully predictable, so <b>bigger isn't automatically better</b>.` },
+    { key: "maximumDisplacement", label: "Maximum single-card displacement", unit: "positions", section: "Displacement",
+      describe: r => r
+        ? `How far the single most-travelled card ended up from its starting position. As with total displacement, true randomness lands close to <b>${r}</b>, not at an extreme.`
+        : `How far the single most-travelled card ended up from its starting position. As with total displacement, neither a very low nor a very high value is automatically better.` },
+    { key: "preservedPairs", label: "Preserved pairs", unit: "pairs", section: "Preserved order",
+      describe: r => r
+        ? `How many times two cards that started next to each other, in order, are <b>still next to each other</b> after the shuffle. True randomness produces about <b>${r}</b> on average — <b>lower is better</b>, down to that point.`
+        : `How many times two cards that started next to each other, in order, are <b>still next to each other</b> after the shuffle. Lower generally means better mixing.` },
+    { key: "preservedSequences", label: "Preserved sequences (3+ cards)", unit: "sequences", section: "Preserved order",
+      describe: r => r
+        ? `How many runs of <b>three or more cards</b> survived the shuffle in their original order. True randomness produces close to <b>${r}</b> — near zero, since long survivors are rare once a deck is well mixed.`
+        : `How many runs of <b>three or more cards</b> survived the shuffle in their original order. Long survivors are rare once a deck is well mixed.` },
+    { key: "cardsInPairs", label: "Cards in preserved pairs", unit: "cards", section: "Preserved order",
+      describe: r => r
+        ? `How many cards in total belong to one of the surviving 2-card runs above. True randomness lands near <b>${r}</b> — <b>lower is better</b>, down to that point.`
+        : `How many cards in total belong to one of the surviving 2-card runs above. Lower generally means better mixing.` },
+    { key: "cardsInSequences", label: "Cards in preserved sequences", unit: "cards", section: "Preserved order",
+      describe: r => r
+        ? `How many cards in total belong to one of the surviving 3-or-more-card runs above. True randomness lands near <b>${r}</b>.`
+        : `How many cards in total belong to one of the surviving 3-or-more-card runs above. Lower generally means better mixing.` },
+    { key: "longestSequence", label: "Longest preserved sequence", unit: "cards", section: "Preserved order",
+      describe: r => r
+        ? `The length of the single longest run of cards left in their original order. True randomness keeps this near <b>${r} cards</b>.`
+        : `The length of the single longest run of cards left in their original order. Lower generally means better mixing.` },
+    { key: "preservedCardPercentage", label: "Preserved card percentage", unit: "%", section: "Preserved order",
+      describe: r => r
+        ? `The share of the whole deck still sitting in some surviving run (pair or longer) after the shuffle. <b>Lower generally means better mixing</b> — down to about <b>${r}</b>, where true randomness lands.`
+        : `The share of the whole deck still sitting in some surviving run (pair or longer) after the shuffle. Lower generally means better mixing.` }
+  ];
+
+  function niceStep(roughStep) {
+    if (roughStep <= 0) return 1;
+    const magnitude = Math.pow(10, Math.floor(Math.log10(roughStep)));
+    const residual = roughStep / magnitude;
+    let niceResidual;
+    if (residual < 1.5) niceResidual = 1;
+    else if (residual < 3) niceResidual = 2;
+    else if (residual < 7) niceResidual = 5;
+    else niceResidual = 10;
+    return niceResidual * magnitude;
+  }
+
+  const plot = document.getElementById("plot");
+  const gridlines = document.getElementById("gridlines");
+  const axis = document.getElementById("axis");
+  const chartTitle = document.getElementById("chart-title");
+  const metricDesc = document.getElementById("metric-desc");
+  const note = document.getElementById("note");
+  const refKey = document.getElementById("ref-key");
+  const callout = document.getElementById("callout");
+  const calloutText = document.getElementById("callout-text");
+  const tableBody = document.getElementById("table-body");
+  const tooltip = document.getElementById("tooltip");
+  const metricSelect = document.getElementById("metric-select");
+  const kindButtons = document.querySelectorAll("#kind-tabs button");
+  const skillButtons = document.querySelectorAll("#skill-tabs button");
+  const dek = document.getElementById("dek");
+  const prov = document.getElementById("prov");
+
+  const labels = Array.from(new Set(ROWS.map(r => r.label)));
+  const hasReference = labels.some(isReference);
+
+  dek.textContent = "Nine measures of how thoroughly each run mixes a deck"
+    + (hasReference ? ", benchmarked against a mathematically ideal random shuffle." : ".");
+  note.hidden = !hasReference;
+  refKey.hidden = !hasReference;
+
+  const trialsByLabel = {};
+  ROWS.forEach(r => { trialsByLabel[r.label] = r.trials; });
+  const totalTrials = labels.reduce((sum, l) => sum + trialsByLabel[l], 0);
+  prov.innerHTML = labels.length + " experiment" + (labels.length === 1 ? "" : "s") + " &times; "
+    + totalTrials + " total trials of a standard 52-card deck.<br>Generated with "
+    + "<code style=\"font-family:inherit\">mvn compile exec:java</code> and "
+    + "<code style=\"font-family:inherit\">TrialReportHtmlFormatter</code> &mdash; se.pbt.shufflelab.";
+
+  METRICS.forEach(m => {
+    const opt = document.createElement("option");
+    opt.value = m.key;
+    opt.textContent = m.label;
+    metricSelect.appendChild(opt);
+  });
+  metricSelect.value = "preservedCardPercentage";
+
+  // Hide a tab entirely when this run has no data for it, rather than
+  // showing an empty chart behind a selectable-but-pointless button.
+  function hideTabsWithNoData(buttons, rowKey) {
+    let firstVisible = null;
+
+    buttons.forEach(btn => {
+      const value = rowKey === "kind" ? btn.dataset.kind : btn.dataset.skill;
+      const hasData = ROWS.some(r => r[rowKey] === value);
+      btn.hidden = !hasData;
+      if (hasData && !firstVisible) firstVisible = btn;
+    });
+
+    if (firstVisible && !Array.from(buttons).some(b => !b.hidden && b.classList.contains("active"))) {
+      buttons.forEach(b => b.classList.remove("active"));
+      firstVisible.classList.add("active");
+    }
+  }
+
+  hideTabsWithNoData(kindButtons, "kind");
+  hideTabsWithNoData(skillButtons, "skillLevel");
+
+  function currentKind() {
+    const active = Array.from(kindButtons).find(b => b.classList.contains("active"));
+    return active ? active.dataset.kind : null;
+  }
+
+  function currentSkill() {
+    const active = Array.from(skillButtons).find(b => b.classList.contains("active"));
+    return active ? active.dataset.skill : null;
+  }
+
+  function fmt(n, metric) {
+    return n.toFixed(2) + (metric.unit === "%" ? "%" : "");
+  }
+
+  // The label is stored as "{name} - {SKILL}"; since skill is now its own
+  // tab, the suffix is redundant in the bar list and can be stripped exactly
+  // (skillLevel is known precisely for each row, so this is not a guess).
+  function displayName(row) {
+    return row.label.replace(" - " + row.skillLevel, "");
+  }
+
+  function render() {
+    const metric = METRICS.find(m => m.key === metricSelect.value);
+    const kind = currentKind();
+    const skill = currentSkill();
+
+    const entries = ROWS
+      .filter(r => r.field === metric.key && r.kind === kind && r.skillLevel === skill)
+      .map(r => ({
+        name: displayName(r),
+        description: r.description,
+        ref: isReference(r.label),
+        mean: r.mean, median: r.median, min: r.min, max: r.max, standardDeviation: r.standardDeviation
+      }))
+      .sort((a, b) => a.mean - b.mean);
+
+    const maxMean = entries.reduce((m, e) => Math.max(m, e.mean), 0);
+    const domain = metric.key === "preservedCardPercentage"
+      ? 100
+      : (() => { const step = niceStep(maxMean / 4 || 1); return Math.max(step, Math.ceil(maxMean / step) * step); })();
+
+    chartTitle.textContent = metric.label + " — mean per experiment"
+      + (metric.unit === "%" ? "" : " (" + metric.unit + ")");
+
+    const refEntry = entries.find(e => e.ref);
+    metricDesc.innerHTML = metric.describe(refEntry ? fmt(refEntry.mean, metric) : null);
+
+    if (metric.section === "Preserved order" && refEntry && refEntry.mean > 0) {
+      const below = entries.filter(e => !e.ref && e.mean <= refEntry.mean * 0.5);
+      if (below.length > 0) {
+        callout.hidden = false;
+        const names = below.map(e => "“" + e.name + "”").join(", ");
+        calloutText.innerHTML = "<b>" + names + "</b> land" + (below.length === 1 ? "s" : "")
+          + " well below the ideal-random reference on this measure. That is not evidence "
+          + (below.length === 1 ? "it" : "they") + " out-randomise" + (below.length === 1 ? "s" : "")
+          + " true randomness — it means that routine's card movements happen to avoid preserving "
+          + "original neighbours more consistently than chance alone, which is not the same as being "
+          + "more thoroughly randomised overall. Cross-check against the displacement measures before "
+          + "ranking a technique on this figure alone.";
+      } else {
+        callout.hidden = true;
+      }
+    } else {
+      callout.hidden = true;
+    }
+
+    gridlines.textContent = "";
+    axis.textContent = "";
+    [0, 0.25, 0.5, 0.75, 1].forEach(fraction => {
+      const line = document.createElement("i");
+      line.style.left = (fraction * 100) + "%";
+      gridlines.appendChild(line);
+
+      const tick = document.createElement("span");
+      tick.style.left = (fraction * 100) + "%";
+      const value = domain * fraction;
+      tick.textContent = (Number.isInteger(value) ? value : value.toFixed(1)) + (metric.unit === "%" ? "%" : "");
+      axis.appendChild(tick);
+    });
+
+    plot.querySelectorAll(".bar-row").forEach(el => el.remove());
+    tableBody.textContent = "";
+
+    entries.forEach(d => {
+      const row = document.createElement("div");
+      row.className = "bar-row";
+      row.tabIndex = 0;
+
+      const label = document.createElement("div");
+      label.className = "bar-label";
+      label.appendChild(document.createTextNode(d.name));
+      if (d.ref) {
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = "reference";
+        label.appendChild(tag);
+      }
+
+      const track = document.createElement("div");
+      track.className = "bar-track";
+
+      const fill = document.createElement("div");
+      fill.className = "bar-fill" + (d.ref ? " is-ref" : "");
+      const widthPct = Math.max((d.mean / domain) * 100, 1.2);
+      fill.style.width = widthPct + "%";
+
+      const value = document.createElement("span");
+      value.className = "bar-value";
+      value.style.left = "calc(" + widthPct + "% + 8px)";
+      value.textContent = fmt(d.mean, metric);
+
+      track.appendChild(fill);
+      track.appendChild(value);
+      row.appendChild(label);
+      row.appendChild(track);
+      plot.appendChild(row);
+
+      const showTip = () => {
+        tooltip.innerHTML = "";
+        const title = document.createElement("div");
+        title.style.fontWeight = "600";
+        title.style.marginBottom = "6px";
+        title.textContent = d.name;
+        tooltip.appendChild(title);
+
+        if (d.description) {
+          const desc = document.createElement("div");
+          desc.className = "desc";
+          desc.textContent = d.description;
+          tooltip.appendChild(desc);
+        }
+
+        [["Mean", d.mean], ["Median", d.median], ["Min", d.min], ["Max", d.max], ["Standard Deviation", d.standardDeviation]].forEach(([k, v]) => {
+          const r = document.createElement("div");
+          r.className = "row";
+          const kEl = document.createElement("span");
+          kEl.textContent = k;
+          const vEl = document.createElement("b");
+          vEl.textContent = fmt(v, metric);
+          r.appendChild(kEl);
+          r.appendChild(vEl);
+          tooltip.appendChild(r);
+        });
+
+        const rect = row.getBoundingClientRect();
+        tooltip.style.left = Math.min(rect.right - 10, window.innerWidth - 250) + "px";
+        tooltip.style.top = (rect.top - 8) + "px";
+        tooltip.classList.add("visible");
+      };
+      const hideTip = () => tooltip.classList.remove("visible");
+
+      row.addEventListener("mouseenter", showTip);
+      row.addEventListener("mousemove", showTip);
+      row.addEventListener("mouseleave", hideTip);
+      row.addEventListener("focus", showTip);
+      row.addEventListener("blur", hideTip);
+
+      const tr = document.createElement("tr");
+      if (d.ref) tr.className = "is-ref";
+      [d.name, d.description, fmt(d.mean, metric), fmt(d.median, metric), fmt(d.min, metric), fmt(d.max, metric), fmt(d.standardDeviation, metric)].forEach(c => {
+        const td = document.createElement("td");
+        td.textContent = c;
+        tr.appendChild(td);
+      });
+      tableBody.appendChild(tr);
+    });
+  }
+
+  metricSelect.addEventListener("change", render);
+
+  kindButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      kindButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      render();
+    });
+  });
+
+  skillButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      skillButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      render();
+    });
+  });
+
+  render();
+</script>
+</body>
+</html>
