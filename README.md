@@ -54,13 +54,16 @@ Run the command-line application to compare shuffle routines and skill levels:
 mvn compile exec:java -Dexec.args="--routine STANDARD_RIFFLE_SHUFFLE --skill EXPERT --trials 1000"
 ```
 
-Omit `--routine` or `--skill` to run every predefined combination. Use `--out` to choose where the resulting
-plain-text report is written. Add `--csv <path>` and/or `--json <path>` to also export the same results in a
-format meant for further processing, such as a spreadsheet or a plotting tool, rather than manual reading. Add
-`--html <path>` to also generate a self-contained, interactive comparison report — open it directly in a
-browser to flip between skill levels and measures, and see every routine's result plotted against the
-others, with a description of what each one does. Add `--open` to open that report in the default browser
-automatically once it's written. Use `--help` to see all available options.
+Omit `--routine` or `--skill` to run every predefined combination. Every routine is run alongside its
+underlying single-technique shuffles (a bare riffle, a bare Faro shuffle, and so on), so a routine's
+contribution over the raw technique is visible, not just the routine itself. Use `--out` to choose where
+the resulting plain-text report is written. Add `--csv <path>` and/or `--json <path>` to also export the
+same results in a format meant for further processing, such as a spreadsheet or a plotting tool, rather
+than manual reading. Add `--html <path>` to also generate a self-contained, interactive comparison report —
+open it directly in a browser to switch between shuffles and routines, flip between skill levels and
+measures, and see every technique's result plotted against the others, with a description of what each one
+does. Add `--open` to open that report in the default browser automatically once it's written. Use `--help`
+to see all available options.
 
 ## Features
 
@@ -78,6 +81,7 @@ automatically once it's written. Use `--help` to see all available options.
 - Skill-based shuffle configuration, including custom skill profiles
 - Configurable shuffle architecture based on operations, shuffles, and routines
 - A catalog of predefined shuffle routines, discoverable and run programmatically
+- A parallel catalog of single-technique shuffles, run and reported alongside routines with their own description
 - An ideal random shuffle baseline (Fisher–Yates), for measuring how close a technique gets to true randomness
 - Faro- and Mongean-shuffle-then-riffle routines, pairing each structured shuffle with a riffle and cut to actually randomise the deck
 - Deck shuffle analysis: card displacement and preserved-order measurement

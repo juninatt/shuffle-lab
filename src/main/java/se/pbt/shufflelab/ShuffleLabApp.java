@@ -7,6 +7,7 @@ import se.pbt.shufflelab.analysis.AggregatedDeckAnalysis;
 import se.pbt.shufflelab.analysis.DeckAnalysis;
 import se.pbt.shufflelab.analysis.DeckAnalysisAggregator;
 import se.pbt.shufflelab.factory.RoutineCatalog;
+import se.pbt.shufflelab.factory.ShuffleCatalog;
 import se.pbt.shufflelab.handling.routine.RoutineProtocol;
 import se.pbt.shufflelab.report.TrialReportCsvFormatter;
 import se.pbt.shufflelab.report.TrialReportFormatter;
@@ -102,7 +103,9 @@ public class ShuffleLabApp implements Callable<Integer> {
         RoutineCatalog[] selectedRoutines = routines != null ? routines : RoutineCatalog.values();
         SkillLevel[] selectedSkillLevels = skillLevels != null ? skillLevels : SkillLevel.values();
 
-        List<TrialSummary> summaries = runTrials(selectedRoutines, selectedSkillLevels, random);
+        List<TrialSummary> summaries = new ArrayList<>();
+        summaries.addAll(runRoutineTrials(selectedRoutines, selectedSkillLevels, random));
+        summaries.addAll(runShuffleTrials(ShuffleCatalog.values(), selectedSkillLevels, random));
 
         String report = TrialReportFormatter.format(summaries);
 
@@ -139,23 +142,70 @@ public class ShuffleLabApp implements Callable<Integer> {
      * @param random a source of randomness, shared across all runs
      * @return one labeled summary per routine/skill-level combination
      */
-    private List<TrialSummary> runTrials(RoutineCatalog[] routines, SkillLevel[] skillLevels, RandomGenerator random) {
+    private List<TrialSummary> runRoutineTrials(RoutineCatalog[] routines, SkillLevel[] skillLevels, RandomGenerator random) {
         List<TrialSummary> summaries = new ArrayList<>();
 
         for (RoutineCatalog routine : routines) {
             for (SkillLevel skillLevel : skillLevels) {
                 RoutineProtocol instance = routine.create(skillLevel);
 
-                List<DeckAnalysis> analyses = TrialRunner.run(instance, trials, random);
-                AggregatedDeckAnalysis aggregated = DeckAnalysisAggregator.aggregate(analyses);
-
-                summaries.add(new TrialSummary(
-                        instance + " - " + skillLevel, routine.description(), TrialKind.ROUTINE, skillLevel, aggregated
+                summaries.add(summarize(
+                        instance.toString(), routine.description(), TrialKind.ROUTINE, skillLevel, instance, random
                 ));
             }
         }
 
         return summaries;
+    }
+
+    /**
+     * Runs every combination of the given single-technique shuffles and
+     * skill levels.
+     *
+     * @param shuffles the shuffles to run
+     * @param skillLevels the skill levels to run each shuffle at
+     * @param random a source of randomness, shared across all runs
+     * @return one labeled summary per shuffle/skill-level combination
+     */
+    private List<TrialSummary> runShuffleTrials(ShuffleCatalog[] shuffles, SkillLevel[] skillLevels, RandomGenerator random) {
+        List<TrialSummary> summaries = new ArrayList<>();
+
+        for (ShuffleCatalog shuffle : shuffles) {
+            for (SkillLevel skillLevel : skillLevels) {
+                RoutineProtocol instance = shuffle.create(skillLevel);
+
+                summaries.add(summarize(
+                        shuffle.displayName(), shuffle.description(), TrialKind.SHUFFLE, skillLevel, instance, random
+                ));
+            }
+        }
+
+        return summaries;
+    }
+
+    /**
+     * Runs a single configured technique or routine and summarizes the result.
+     *
+     * @param name the technique or routine's display name
+     * @param description a short explanation of what it does
+     * @param kind whether {@code instance} is a single shuffle or a routine
+     * @param skillLevel the simulated performer skill level used
+     * @param instance the configured technique or routine to run
+     * @param random a source of randomness, shared across all runs
+     * @return the labeled summary of the run
+     */
+    private TrialSummary summarize(
+            String name,
+            String description,
+            TrialKind kind,
+            SkillLevel skillLevel,
+            RoutineProtocol instance,
+            RandomGenerator random) {
+
+        List<DeckAnalysis> analyses = TrialRunner.run(instance, trials, random);
+        AggregatedDeckAnalysis aggregated = DeckAnalysisAggregator.aggregate(analyses);
+
+        return new TrialSummary(name + " - " + skillLevel, description, kind, skillLevel, aggregated);
     }
 
     /**
