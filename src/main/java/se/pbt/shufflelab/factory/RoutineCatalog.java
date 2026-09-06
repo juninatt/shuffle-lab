@@ -22,47 +22,73 @@ public enum RoutineCatalog {
     /**
      * @see RoutineFactory#simpleRiffleShuffle(SkillLevel)
      */
-    SIMPLE_RIFFLE_SHUFFLE(RoutineFactory::simpleRiffleShuffle),
+    SIMPLE_RIFFLE_SHUFFLE(
+            RoutineFactory::simpleRiffleShuffle,
+            "One human-style riffle shuffle followed by a single cut."
+    ),
 
     /**
      * @see RoutineFactory#repeatedOverhandShuffle(SkillLevel)
      */
-    REPEATED_OVERHAND_SHUFFLE(RoutineFactory::repeatedOverhandShuffle),
+    REPEATED_OVERHAND_SHUFFLE(
+            RoutineFactory::repeatedOverhandShuffle,
+            "Three overhand shuffles in a row, modelling how a performer typically repeats the technique."
+    ),
 
     /**
      * @see RoutineFactory#standardRiffleShuffle(SkillLevel)
      */
-    STANDARD_RIFFLE_SHUFFLE(RoutineFactory::standardRiffleShuffle),
+    STANDARD_RIFFLE_SHUFFLE(
+            RoutineFactory::standardRiffleShuffle,
+            "Three riffle shuffles followed by a cut — the sequence commonly used at a casino table."
+    ),
 
     /**
      * @see RoutineFactory#casualShuffleSequence(SkillLevel)
      */
-    CASUAL_SHUFFLE_SEQUENCE(RoutineFactory::casualShuffleSequence),
+    CASUAL_SHUFFLE_SEQUENCE(
+            RoutineFactory::casualShuffleSequence,
+            "An overhand shuffle to loosen the deck, followed by two riffle shuffles and a cut."
+    ),
 
     /**
      * @see RoutineFactory#pileShuffleThenRiffle(SkillLevel)
      */
-    PILE_SHUFFLE_THEN_RIFFLE(RoutineFactory::pileShuffleThenRiffle),
+    PILE_SHUFFLE_THEN_RIFFLE(
+            RoutineFactory::pileShuffleThenRiffle,
+            "A 4-pile shuffle followed by one riffle shuffle and a cut, since a pile shuffle alone does not randomise a deck."
+    ),
 
     /**
      * @see RoutineFactory#idealRandomShuffle(SkillLevel)
      */
-    IDEAL_RANDOM_SHUFFLE(RoutineFactory::idealRandomShuffle),
+    IDEAL_RANDOM_SHUFFLE(
+            RoutineFactory::idealRandomShuffle,
+            "A single Fisher–Yates shuffle — the mathematically ideal random baseline every other routine is measured against."
+    ),
 
     /**
      * @see RoutineFactory#faroShuffleThenRiffle(SkillLevel)
      */
-    FARO_SHUFFLE_THEN_RIFFLE(RoutineFactory::faroShuffleThenRiffle),
+    FARO_SHUFFLE_THEN_RIFFLE(
+            RoutineFactory::faroShuffleThenRiffle,
+            "An out-Faro shuffle followed by one riffle shuffle and a cut, since a Faro shuffle alone is highly structured."
+    ),
 
     /**
      * @see RoutineFactory#mongeanShuffleThenRiffle(SkillLevel)
      */
-    MONGEAN_SHUFFLE_THEN_RIFFLE(RoutineFactory::mongeanShuffleThenRiffle);
+    MONGEAN_SHUFFLE_THEN_RIFFLE(
+            RoutineFactory::mongeanShuffleThenRiffle,
+            "A Mongean shuffle followed by one riffle shuffle and a cut, since a Mongean shuffle alone is highly structured."
+    );
 
     private final Function<SkillLevel, RoutineProtocol> factory;
+    private final String description;
 
-    RoutineCatalog(Function<SkillLevel, RoutineProtocol> factory) {
+    RoutineCatalog(Function<SkillLevel, RoutineProtocol> factory, String description) {
         this.factory = factory;
+        this.description = description;
     }
 
     /**
@@ -74,5 +100,14 @@ public enum RoutineCatalog {
      */
     public RoutineProtocol create(SkillLevel skillLevel) {
         return factory.apply(skillLevel);
+    }
+
+    /**
+     * Returns a short, human-readable explanation of what this routine does.
+     *
+     * @return this routine's description
+     */
+    public String description() {
+        return description;
     }
 }

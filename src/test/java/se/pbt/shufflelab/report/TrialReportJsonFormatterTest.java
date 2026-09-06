@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.analysis.AggregatedDeckAnalysis;
 import se.pbt.shufflelab.analysis.displacement.AggregatedDisplacementResult;
 import se.pbt.shufflelab.analysis.preservedorder.AggregatedPreservedOrderResult;
+import se.pbt.shufflelab.skill.SkillLevel;
 import se.pbt.shufflelab.statistics.Statistics;
+import se.pbt.shufflelab.trial.TrialKind;
 import se.pbt.shufflelab.trial.TrialSummary;
 
 import java.util.List;
@@ -32,7 +34,7 @@ class TrialReportJsonFormatterTest {
 
         AggregatedDeckAnalysis analysis = new AggregatedDeckAnalysis(sampleSize, displacement, preservedOrder);
 
-        return new TrialSummary(label, analysis);
+        return new TrialSummary(label, "Test description.", TrialKind.ROUTINE, SkillLevel.EXPERT, analysis);
     }
 
     @Nested
@@ -79,7 +81,7 @@ class TrialReportJsonFormatterTest {
             assertTrue(json.contains("\"median\":44.00"));
             assertTrue(json.contains("\"min\":30.00"));
             assertTrue(json.contains("\"max\":60.00"));
-            assertTrue(json.contains("\"stddev\":7.25"));
+            assertTrue(json.contains("\"standardDeviation\":7.25"));
         }
 
         @Test

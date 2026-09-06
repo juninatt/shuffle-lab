@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.analysis.AggregatedDeckAnalysis;
 import se.pbt.shufflelab.analysis.displacement.AggregatedDisplacementResult;
 import se.pbt.shufflelab.analysis.preservedorder.AggregatedPreservedOrderResult;
+import se.pbt.shufflelab.skill.SkillLevel;
 import se.pbt.shufflelab.statistics.Statistics;
+import se.pbt.shufflelab.trial.TrialKind;
 import se.pbt.shufflelab.trial.TrialSummary;
 
 import java.util.List;
@@ -30,7 +32,7 @@ class TrialReportCsvFormatterTest {
 
         AggregatedDeckAnalysis analysis = new AggregatedDeckAnalysis(sampleSize, displacement, preservedOrder);
 
-        return new TrialSummary(label, analysis);
+        return new TrialSummary(label, "Test description.", TrialKind.ROUTINE, SkillLevel.EXPERT, analysis);
     }
 
     @Nested
@@ -42,7 +44,7 @@ class TrialReportCsvFormatterTest {
 
             String csv = TrialReportCsvFormatter.format(results);
 
-            assertTrue(csv.startsWith("label,trials,field,mean,median,min,max,stddev"));
+            assertTrue(csv.startsWith("label,trials,field,mean,median,min,max,standardDeviation"));
         }
 
         @Test

@@ -8,6 +8,7 @@ import se.pbt.shufflelab.factory.RoutineFactory;
 import se.pbt.shufflelab.handling.routine.RoutineProtocol;
 import se.pbt.shufflelab.report.TrialReportFormatter;
 import se.pbt.shufflelab.skill.SkillLevel;
+import se.pbt.shufflelab.trial.TrialKind;
 import se.pbt.shufflelab.trial.TrialRunner;
 import se.pbt.shufflelab.trial.TrialSummary;
 
@@ -37,7 +38,9 @@ class TrialReportPipelineIntegrationTest {
 
         List<DeckAnalysis> analyses = TrialRunner.run(routine, 50, random);
         AggregatedDeckAnalysis aggregated = DeckAnalysisAggregator.aggregate(analyses);
-        TrialSummary summary = new TrialSummary("Riffle - EXPERT", aggregated);
+        TrialSummary summary = new TrialSummary(
+                "Riffle - EXPERT", "A simple riffle shuffle routine.", TrialKind.ROUTINE, SkillLevel.EXPERT, aggregated
+        );
 
         String report = TrialReportFormatter.format(List.of(summary));
 
@@ -102,6 +105,8 @@ class TrialReportPipelineIntegrationTest {
         List<DeckAnalysis> analyses = TrialRunner.run(routine, 20, random);
         AggregatedDeckAnalysis aggregated = DeckAnalysisAggregator.aggregate(analyses);
 
-        return new TrialSummary("Riffle - " + skillLevel, aggregated);
+        return new TrialSummary(
+                "Riffle - " + skillLevel, "A simple riffle shuffle routine.", TrialKind.ROUTINE, skillLevel, aggregated
+        );
     }
 }

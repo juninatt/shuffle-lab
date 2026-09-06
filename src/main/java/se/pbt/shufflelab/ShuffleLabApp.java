@@ -12,6 +12,7 @@ import se.pbt.shufflelab.report.TrialReportCsvFormatter;
 import se.pbt.shufflelab.report.TrialReportFormatter;
 import se.pbt.shufflelab.report.TrialReportJsonFormatter;
 import se.pbt.shufflelab.skill.SkillLevel;
+import se.pbt.shufflelab.trial.TrialKind;
 import se.pbt.shufflelab.trial.TrialRunner;
 import se.pbt.shufflelab.trial.TrialSummary;
 
@@ -124,7 +125,9 @@ public class ShuffleLabApp implements Callable<Integer> {
                 List<DeckAnalysis> analyses = TrialRunner.run(instance, trials, random);
                 AggregatedDeckAnalysis aggregated = DeckAnalysisAggregator.aggregate(analyses);
 
-                summaries.add(new TrialSummary(instance + " - " + skillLevel, aggregated));
+                summaries.add(new TrialSummary(
+                        instance + " - " + skillLevel, routine.description(), TrialKind.ROUTINE, skillLevel, aggregated
+                ));
             }
         }
 

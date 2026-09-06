@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import se.pbt.shufflelab.analysis.AggregatedDeckAnalysis;
 import se.pbt.shufflelab.analysis.displacement.AggregatedDisplacementResult;
 import se.pbt.shufflelab.analysis.preservedorder.AggregatedPreservedOrderResult;
+import se.pbt.shufflelab.skill.SkillLevel;
+import se.pbt.shufflelab.trial.TrialKind;
 import se.pbt.shufflelab.trial.TrialSummary;
 import se.pbt.shufflelab.statistics.Statistics;
 
@@ -30,7 +32,7 @@ class TrialReportFormatterTest {
 
         AggregatedDeckAnalysis analysis = new AggregatedDeckAnalysis(sampleSize, displacement, preservedOrder);
 
-        return new TrialSummary(label, analysis);
+        return new TrialSummary(label, "Test description.", TrialKind.ROUTINE, SkillLevel.EXPERT, analysis);
     }
 
     @Nested

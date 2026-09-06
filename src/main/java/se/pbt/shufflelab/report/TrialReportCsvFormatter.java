@@ -21,7 +21,7 @@ import java.util.Objects;
  */
 public final class TrialReportCsvFormatter {
 
-    private static final String HEADER = "label,trials,field,mean,median,min,max,stddev";
+    private static final String HEADER = "label,trials,field,mean,median,min,max,standardDeviation";
 
     private TrialReportCsvFormatter() {
         throw new UnsupportedOperationException("Utility class");
